@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>tailwind.config={theme:{extend:{fontFamily:{sans:['DM Sans','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
   <link rel="stylesheet" href="css/tokens.css"/>
   <link rel="stylesheet" href="css/base.css"/>
@@ -113,6 +114,16 @@
   </div>
 </div>
 
+<div id="help-overlay" class="modal-overlay hidden">
+  <div class="modal glass-card" style="max-width:780px;width:100%">
+    <div class="modal-header">
+      <h3>📖 Documentation FlowMind</h3>
+      <button class="glass-btn-icon" id="help-close">✕</button>
+    </div>
+    <div class="modal-body" id="help-body" style="max-height:78vh;overflow-y:auto;line-height:1.65"></div>
+  </div>
+</div>
+
 <div class="app-shell">
   <aside class="sidebar glass-sidebar" id="sidebar">
     <div class="sidebar-brand">
@@ -153,6 +164,7 @@
           <span class="btn-add-label">Nouvelle tâche</span>
         </button>
         <button class="glass-btn-icon btn-focus-launch" id="launch-focus-btn">◎</button>
+        <button class="glass-btn-icon" id="help-btn" title="Aide / Documentation">?</button>
         <button class="glass-btn-icon" id="feedback-btn">💬</button>
       </div>
     </header>
@@ -319,6 +331,32 @@
             </label>
           </div>
           <div id="backup-status" style="font-size:11px;color:var(--mint);margin-top:8px;min-height:16px"></div>
+
+          <div class="settings-section-title" style="margin-top:14px">☁ Synchronisation cloud</div>
+          <p class="danger-desc" style="margin-bottom:10px">
+            Sauvegardez dans votre compte GitHub (Gist privé).<br>
+            <a href="https://github.com/settings/tokens/new?scopes=gist&description=FlowMind" target="_blank" style="color:var(--accent);font-size:11px">Créer un token GitHub (scope : gist) →</a>
+          </p>
+          <div class="form-group" style="margin-bottom:8px">
+            <input type="password" id="cloud-token-input" class="glass-input glass-input-sm"
+              placeholder="GitHub Personal Access Token (scope : gist)" autocomplete="off"/>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-secondary btn-sm" id="cloud-save-btn">☁ Sauvegarder</button>
+            <button class="btn-secondary btn-sm" id="cloud-load-btn">☁ Charger</button>
+          </div>
+          <div id="cloud-status" style="font-size:11px;margin-top:8px;min-height:16px"></div>
+
+          <div class="settings-section-title" style="margin-top:16px">📁 Sync fichier local (Nextcloud)</div>
+          <p class="danger-desc" style="margin-bottom:10px">
+            Sauvegarde dans un fichier de votre dossier Nextcloud — synchronisé automatiquement par le client de bureau.<br>
+            <span style="font-size:11px;color:var(--t3)">Chrome / Edge uniquement.</span>
+          </p>
+          <div style="display:flex;gap:8px">
+            <button class="btn-secondary btn-sm" id="nc-save-btn">📁 Sauvegarder dans un fichier</button>
+            <button class="btn-secondary btn-sm" id="nc-load-btn">📁 Charger depuis un fichier</button>
+          </div>
+          <div id="nc-status" style="font-size:11px;margin-top:8px;min-height:16px"></div>
         </div>
 
         <div class="glass-card settings-card">

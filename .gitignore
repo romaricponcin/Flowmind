@@ -26,3 +26,6 @@ npm-debug.log*
 
 # Sauvegardes locales
 *.backup.json
+
+# Données utilisateur (sync Nextcloud — ne pas commiter)
+flowmind-data.json

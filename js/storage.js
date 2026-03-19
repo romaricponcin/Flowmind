@@ -91,5 +91,43 @@ const Storage = (() => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   }
 
-  return { load, save, reset, generateId, DEFAULT_STATE };
+  // ── CLOUD SYNC (GitHub Gist) ────────────────────────────────────────────
+  const CLOUD_TOKEN_KEY = 'flowmind_gist_token';
+  const CLOUD_GIST_KEY  = 'flowmind_gist_id';
+
+  function getCloudToken() { return localStorage.getItem(CLOUD_TOKEN_KEY) || ''; }
+  function setCloudToken(t) { localStorage.setItem(CLOUD_TOKEN_KEY, t); }
+  function getGistId()      { return localStorage.getItem(CLOUD_GIST_KEY) || ''; }
+  function setGistId(id)    { localStorage.setItem(CLOUD_GIST_KEY, id); }
+
+  async function saveToCloud(data) {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const content = JSON.stringify({ version: 'flowmind-backup-v1', exportedAt: new Date().toISOString(), data }, null, 2);
+    const payload = { description: 'FlowMind — sauvegarde automatique', public: false, files: { 'flowmind-data.json': { content } } };
+    const gistId = getGistId();
+    const url    = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
+    const method = gistId ? 'PATCH' : 'POST';
+    const resp = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!resp.ok) { const err = await resp.json(); throw new Error(err.message || `HTTP ${resp.status}`); }
+    const json = await resp.json();
+    setGistId(json.id);
+    return json;
+  }
+
+  async function loadFromCloud() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const gistId = getGistId();
+    if (!gistId) throw new Error('Aucune sauvegarde cloud trouvée. Sauvegardez d\'abord.');
+    const resp = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { Authorization: `token ${token}` } });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    const raw  = json.files['flowmind-data.json']?.content;
+    if (!raw) throw new Error('Fichier introuvable dans le Gist.');
+    return JSON.parse(raw);
+  }
+
+  return { load, save, reset, generateId, DEFAULT_STATE,
+    getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud };
 })();

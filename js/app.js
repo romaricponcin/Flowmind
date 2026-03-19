@@ -109,6 +109,15 @@ const App = (() => {
       Projects.showCreateModal();
     });
 
+    // Help button — affiche le README.md rendu en HTML
+    document.getElementById('help-btn')?.addEventListener('click', _showHelp);
+    document.getElementById('help-close')?.addEventListener('click', () => {
+      document.getElementById('help-overlay')?.classList.add('hidden');
+    });
+    document.getElementById('help-overlay')?.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.currentTarget.classList.add('hidden');
+    });
+
     // Feedback button
     document.getElementById('feedback-btn')?.addEventListener('click', _showFeedbackModal);
 
@@ -219,6 +228,76 @@ const App = (() => {
       });
     });
 
+    // Pré-remplir le token s'il existe déjà
+    const tokenInput = document.getElementById('cloud-token-input');
+    if (tokenInput) tokenInput.value = Storage.getCloudToken();
+
+    // Sauvegarder dans le cloud
+    document.getElementById('cloud-save-btn')?.addEventListener('click', async () => {
+      const t = document.getElementById('cloud-token-input')?.value.trim();
+      if (t) Storage.setCloudToken(t);
+      _setCloudStatus('⏳ Sauvegarde en cours…', 'var(--t3)');
+      try {
+        await Storage.saveToCloud(_state);
+        _setCloudStatus('✓ Sauvegarde cloud réussie', 'var(--mint)');
+      } catch (e) {
+        _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
+      }
+    });
+
+    // Charger depuis le cloud
+    document.getElementById('cloud-load-btn')?.addEventListener('click', async () => {
+      const t = document.getElementById('cloud-token-input')?.value.trim();
+      if (t) Storage.setCloudToken(t);
+      _setCloudStatus('⏳ Chargement en cours…', 'var(--t3)');
+      try {
+        const backup = await Storage.loadFromCloud();
+        _applyBackupData(backup);
+        _setCloudStatus('✓ Données restaurées depuis le cloud', 'var(--mint)');
+      } catch (e) {
+        _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
+      }
+    });
+
+    // ── Sync fichier local (File System Access API) ──
+    document.getElementById('nc-save-btn')?.addEventListener('click', async () => {
+      if (!window.showSaveFilePicker) {
+        _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
+        return;
+      }
+      try {
+        const fileHandle = await window.showSaveFilePicker({
+          suggestedName: 'flowmind-data.json',
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+        });
+        const content = JSON.stringify({ version: 'flowmind-backup-v1', exportedAt: new Date().toISOString(), data: _state }, null, 2);
+        const writable = await fileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        _setNcStatus('✓ Fichier sauvegardé — Nextcloud le synchronisera automatiquement', 'var(--mint)');
+      } catch (e) {
+        if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
+      }
+    });
+
+    document.getElementById('nc-load-btn')?.addEventListener('click', async () => {
+      if (!window.showOpenFilePicker) {
+        _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
+        return;
+      }
+      try {
+        const [fileHandle] = await window.showOpenFilePicker({
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+        });
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        _applyBackupData(parsed);
+        _setNcStatus('✓ Données restaurées depuis le fichier Nextcloud', 'var(--mint)');
+      } catch (e) {
+        if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
+      }
+    });
   }
 
   // ─── DASHBOARD ─────────────────────────────────────────────────────────
@@ -791,50 +870,50 @@ const App = (() => {
     }
   }
 
+  function _applyBackupData(parsed) {
+    if (!parsed.version || !parsed.version.startsWith('flowmind-backup')) {
+      throw new Error('Format de sauvegarde non reconnu.');
+    }
+    if (!parsed.data || !Array.isArray(parsed.data.projects)) {
+      throw new Error('Données manquantes ou corrompues.');
+    }
+
+    const exportDate = parsed.exportedAt
+      ? new Date(parsed.exportedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+      : 'date inconnue';
+
+    const nbProjects = parsed.data.projects?.length || 0;
+    const nbTasks    = parsed.data.tasks?.length || 0;
+
+    showConfirm(
+      'Restaurer la sauvegarde du ' + exportDate + ' ?\n(' + nbProjects + ' projets, ' + nbTasks + ' tâches)\n\nVos données actuelles seront remplacées.',
+      () => {
+        const defaults = Storage.DEFAULT_STATE;
+        _state = Object.assign({}, defaults, parsed.data);
+        _state.config = Object.assign({}, defaults.config, parsed.data.config || {});
+
+        Storage.save(_state);
+
+        Config.init(_state);
+        Gamification.init(_state, saveState);
+        Projects.init(_state, saveState);
+        Tasks.init(_state, saveState);
+        ICal.init(_state, saveState);
+        Reports.init(_state);
+        Projects.populateSelects();
+        Gamification.renderSidebar();
+        setTimeout(() => { _showView('dashboard'); }, 50);
+      }
+    );
+  }
+
   function _importBackup(file) {
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
         const parsed = JSON.parse(ev.target.result);
-
-        // Vérification du format
-        if (!parsed.version || !parsed.version.startsWith('flowmind-backup')) {
-          throw new Error('Format de sauvegarde non reconnu.');
-        }
-        if (!parsed.data || !Array.isArray(parsed.data.projects)) {
-          throw new Error('Données manquantes ou corrompues.');
-        }
-
-        const exportDate = parsed.exportedAt
-          ? new Date(parsed.exportedAt).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' })
-          : 'date inconnue';
-
-        const nbProjects = parsed.data.projects?.length || 0;
-        const nbTasks    = parsed.data.tasks?.length || 0;
-
-        showConfirm(
-          'Restaurer la sauvegarde du ' + exportDate + ' ?\n(' + nbProjects + ' projets, ' + nbTasks + ' tâches)\n\nVos données actuelles seront remplacées.',
-          () => {
-            // Fusionner avec les defaults pour éviter les champs manquants
-            const defaults = Storage.DEFAULT_STATE;
-            _state = Object.assign({}, defaults, parsed.data);
-            _state.config = Object.assign({}, defaults.config, parsed.data.config || {});
-
-            Storage.save(_state);
-
-            // Réinitialiser tous les modules
-            Config.init(_state);
-            Gamification.init(_state, saveState);
-            Projects.init(_state, saveState);
-            Tasks.init(_state, saveState);
-            ICal.init(_state, saveState);
-            Reports.init(_state);
-            Projects.populateSelects();
-            Gamification.renderSidebar();
-            _setBackupStatus('✓ Sauvegarde restaurée (' + nbTasks + ' tâches, ' + nbProjects + ' projets)', 'var(--mint)');
-            setTimeout(() => { _showView('dashboard'); }, 50);
-          }
-        );
+        _applyBackupData(parsed);
+        _setBackupStatus('✓ Sauvegarde restaurée', 'var(--mint)');
       } catch (e) {
         _setBackupStatus('✗ Fichier invalide : ' + e.message, 'var(--danger)');
       }
@@ -851,6 +930,65 @@ const App = (() => {
     setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 5000);
   }
 
+  function _setCloudStatus(msg, color) {
+    const el = document.getElementById('cloud-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color || 'var(--mint)';
+    setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 6000);
+  }
+
+  function _setNcStatus(msg, color) {
+    const el = document.getElementById('nc-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color || 'var(--mint)';
+    setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 6000);
+  }
+
+  async function _showHelp() {
+    const overlay = document.getElementById('help-overlay');
+    const body    = document.getElementById('help-body');
+    if (!overlay || !body) return;
+    overlay.classList.remove('hidden');
+    if (body.dataset.loaded) return; // déjà chargé
+    body.innerHTML = '<p style="color:var(--t3);padding:20px 0">Chargement…</p>';
+    try {
+      const resp = await fetch('./README.md');
+      if (!resp.ok) throw new Error('README introuvable');
+      const md = await resp.text();
+      body.innerHTML = window.marked ? marked.parse(md) : '<pre style="white-space:pre-wrap">' + md + '</pre>';
+      body.dataset.loaded = '1';
+      _styleHelpBody(body);
+    } catch (e) {
+      body.innerHTML = '<p style="color:var(--danger)">Impossible de charger la documentation : ' + e.message + '</p>';
+    }
+  }
+
+  function _styleHelpBody(el) {
+    // Titres
+    el.querySelectorAll('h1').forEach(h => { h.style.cssText = 'font-size:20px;font-weight:700;margin:0 0 12px;color:var(--t1)'; });
+    el.querySelectorAll('h2').forEach(h => { h.style.cssText = 'font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--accent);border-bottom:1px solid var(--glass-border);padding-bottom:4px'; });
+    el.querySelectorAll('h3').forEach(h => { h.style.cssText = 'font-size:13px;font-weight:600;margin:14px 0 6px;color:var(--t1)'; });
+    el.querySelectorAll('h4').forEach(h => { h.style.cssText = 'font-size:12px;font-weight:600;margin:10px 0 4px;color:var(--t2)'; });
+    // Paragraphes & listes
+    el.querySelectorAll('p').forEach(p => { p.style.cssText = 'font-size:13px;color:var(--t2);margin:0 0 8px'; });
+    el.querySelectorAll('li').forEach(li => { li.style.cssText = 'font-size:13px;color:var(--t2);margin:3px 0'; });
+    el.querySelectorAll('ul,ol').forEach(l => { l.style.cssText = 'padding-left:18px;margin:4px 0 10px'; });
+    // Blocs de code
+    el.querySelectorAll('pre').forEach(pre => { pre.style.cssText = 'background:rgba(0,0,0,0.25);border:1px solid var(--glass-border);border-radius:8px;padding:12px;font-size:11px;overflow-x:auto;margin:8px 0'; });
+    el.querySelectorAll('code:not(pre code)').forEach(c => { c.style.cssText = 'background:rgba(79,142,255,0.12);border-radius:4px;padding:1px 5px;font-size:11px;font-family:"JetBrains Mono",monospace;color:var(--accent)'; });
+    // Tableaux
+    el.querySelectorAll('table').forEach(t => { t.style.cssText = 'width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px'; });
+    el.querySelectorAll('th').forEach(th => { th.style.cssText = 'text-align:left;padding:6px 10px;background:rgba(255,255,255,0.05);color:var(--t3);font-weight:600;border-bottom:1px solid var(--glass-border)'; });
+    el.querySelectorAll('td').forEach(td => { td.style.cssText = 'padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--t2)'; });
+    // Liens
+    el.querySelectorAll('a').forEach(a => { a.style.cssText = 'color:var(--accent);text-decoration:none'; a.target = '_blank'; });
+    // Séparateurs
+    el.querySelectorAll('hr').forEach(hr => { hr.style.cssText = 'border:none;border-top:1px solid var(--glass-border);margin:16px 0'; });
+    // Blockquotes
+    el.querySelectorAll('blockquote').forEach(bq => { bq.style.cssText = 'border-left:3px solid var(--accent-border);padding:6px 12px;margin:8px 0;background:rgba(79,142,255,0.05);border-radius:0 6px 6px 0'; });
+  }
 
   return { init, refresh, saveState, showModal, closeModal, showConfirm, launchFocusMode };
 })();

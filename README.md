@@ -1,123 +1,228 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
+**v1.1.0** · Application web 100 % navigateur, sans serveur, sans installation.
 
-Application web conçue spécifiquement pour les travailleurs avec un profil TDA (Trouble du Déficit de l'Attention). Fonctionne entièrement dans le navigateur, sans serveur, sans base de données.
+> Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
+
+🌐 **Accès en ligne :** [romaricponcin.github.io/Flowmind](https://romaricponcin.github.io/Flowmind/)
+
+---
 
 ## ✨ Fonctionnalités
 
-### 🧠 Adapté TDA
-- **Mode Focus** : N'affiche qu'une tâche à la fois pour éviter la paralysie par l'analyse
-- **Décomposition automatique** : Divise une tâche complexe en micro-étapes (< 15 min) selon son contenu
-- **Minuterie Time Timer** : Anneau SVG visuel avec alerte couleur progressive (cyan → orange → rouge)
-- **Gamification dopaminergique** : XP, niveaux, streaks et animation de récompense à chaque validation
-
-### 📁 Gestion multi-projets
-- Projets avec couleurs personnalisées
-- Tâches avec priorité, échéance, durée estimée
-- Sous-tâches avec coches individuelles
-- Historique complet des accomplissements
-
-### 📅 Intégration Zimbra / iCal
-- Import via URL `.ics` (avec proxy CORS)
-- Import direct depuis un fichier `.ics` téléchargé
-- Affichage des événements à venir et passés
-
-### 📊 Rapports d'activité
-- Filtre par projet et période (semaine / mois / tout)
-- Export en Markdown prêt pour la documentation
-- Vue statistique : tâches, projets actifs, streak
-
-### ⚙ Personnalisation complète
-- Couleur d'accentuation et de succès
-- 3 thèmes (Sombre, Atténué, Clair)
-- Durée Pomodoro configurable
-- Sons de minuterie (cloche / carillon / aucun)
+| Domaine | Ce que fait FlowMind |
+|---|---|
+| 🧠 TDA | Mode focus, décomposition micro-étapes, minuterie Time Timer |
+| 📁 Projets | Multi-projets colorés, statuts, priorités, échéances |
+| 🔁 Récurrence | Tâches hebdo / mensuel / tous les X jours |
+| 📅 Agenda | Import Zimbra via URL iCal ou fichier `.ics` |
+| 📊 Rapports | Stats filtrées, export Markdown |
+| 💾 Sauvegarde | Export JSON, GitHub Gist, sync fichier local (Nextcloud) |
+| 🎮 Gamification | XP, niveaux, streaks, animations de récompense |
 
 ---
 
-## 🚀 Déploiement sur GitHub Pages
+## 📖 Guide des fonctionnalités avancées
 
-### Étape 1 — Préparer le dépôt
+> Les fonctionnalités simples (créer une tâche, changer de thème, gérer des projets) sont intuitives. Ce guide couvre uniquement ce qui nécessite quelques explications.
 
-```bash
-# Cloner ou créer un dépôt
-git init flowmind
-cd flowmind
+---
 
-# Copier tous les fichiers du projet dans ce dossier
-# Structure attendue :
-# flowmind/
-# ├── index.html
-# ├── config.json
-# ├── css/
-# │   └── main.css
-# └── js/
-#     ├── storage.js
-#     ├── config.js
-#     ├── gamification.js
-#     ├── timer.js
-#     ├── projects.js
-#     ├── tasks.js
-#     ├── ical.js
-#     ├── reports.js
-#     └── app.js
+### 🔁 Tâches récurrentes
+
+Lors de la création ou de la modification d'une tâche, activez le toggle **"Tâche récurrente"** pour faire apparaître les options.
+
+```
+┌─────────────────────────────────────────┐
+│  ☑ Tâche récurrente                     │
+│                                         │
+│  Du  [19/03/2026]  au  [19/06/2026]    │
+│                                         │
+│  Fréquence :                            │
+│  ○ Hebdomadaire  ○ Mensuel              │
+│  ○ Tous les  [7]  jours                 │
+└─────────────────────────────────────────┘
 ```
 
-### Étape 2 — Pousser sur GitHub
+- **Hebdomadaire** : se régénère chaque lundi
+- **Mensuel** : même date chaque mois
+- **Tous les X jours** : intervalle libre (ex : tous les 3 jours)
+- Une icône ↺ apparaît dans le titre de la tâche pour signaler la récurrence
+- À la validation (statut "Terminé"), la tâche se recrée automatiquement pour la prochaine occurrence
+
+---
+
+### 🎯 Mode Focus
+
+Le mode Focus n'affiche qu'une tâche à la fois pour éviter la dispersion.
+
+#### Lancer le mode Focus
+
+1. Vue **Focus** dans la barre latérale
+2. Cliquer sur **▶ Démarrer** sur la tâche souhaitée
+
+#### Dans le panneau Focus
+
+```
+┌──────────────────────────────────────────────┐
+│              🎯 Mode Focus                   │
+│                                              │
+│  ┌──────────────────────────────────────┐   │
+│  │  Préparer la réunion du vendredi     │   │
+│  │  Projet Pédagogie  ·  ⬤ En cours    │   │
+│  └──────────────────────────────────────┘   │
+│                                              │
+│         ╭─────────────────╮                 │
+│         │   ⬤  24:37      │  ← anneau SVG  │
+│         │   Time Timer    │                 │
+│         ╰─────────────────╯                 │
+│                                             │
+│  [25 min] [50 min] [15 min] [Perso]         │
+│                    ↑ saisir une durée libre  │
+│                                             │
+│  Sous-tâches :                              │
+│  ☐ Définir l'ordre du jour     ← cliquer   │
+│  ☑ Prévenir les participants   ← pour      │
+│  ☐ Préparer le support         ← activer   │
+└──────────────────────────────────────────────┘
+```
+
+**Points clés :**
+- **Cliquer sur le titre d'une sous-tâche** la met en surbrillance comme tâche active courante
+- **Pilule "Perso"** : saisir une durée en minutes puis Entrée pour lancer la minuterie
+- **Changer le statut** depuis le panneau Focus fonctionne sans fermer/rouvrir (boutons ↩ Reporté / Terminé directement actifs)
+- La minuterie ne se remet **pas** à zéro quand on coche une sous-tâche
+
+---
+
+### 🎨 Code couleur des statuts
+
+Les lignes de tâches sont colorées selon leur statut, visible dans le tableau de bord et les listes :
+
+```
+  ┃ À faire       fond neutre, liseré gris
+  ┃ En cours      fond bleu,  liseré bleu accent         ←
+  ┃ Reporté       fond bleu soutenu, liseré bleu-gris    ←  barres colorées
+  ┃ Terminé       fond vert, liseré vert mint            ←
+```
+
+- Le bouton de statut **actif** est renforcé (bordure, gras, halo lumineux)
+- Le bouton **↩** à gauche des statuts remet la tâche à "À faire"
+
+---
+
+### 💾 Sauvegarde des données
+
+Les données sont stockées dans le `localStorage` du navigateur — elles restent sur le PC où vous travaillez. Pour les sauvegarder ou les transférer, trois options sont disponibles dans **Paramètres → Sauvegarde & Restauration**.
+
+---
+
+#### Option 1 — Export / Import JSON (local)
+
+```
+  Exporter ──► télécharge  flowmind-backup-XXXX.json  sur votre PC
+  Importer ──► sélectionner ce fichier pour restaurer
+```
+
+Simple, sans compte. Utile pour faire une sauvegarde ponctuelle ou migrer vers un autre navigateur.
+
+---
+
+#### Option 2 — GitHub Gist (cloud personnel)
+
+Sauvegarde dans votre compte GitHub, sans serveur, sans abonnement.
+
+**Étape 1 — Créer un token GitHub**
+
+```
+  github.com → avatar → Settings
+  → Developer settings → Personal access tokens → Tokens (classic)
+  → Generate new token
+     ☑ gist          ← seule case à cocher
+     Durée : No expiration (ou 1 an)
+  → Copier le token  ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+**Étape 2 — Configurer FlowMind**
+
+```
+  Paramètres → Sauvegarde & Restauration
+  → ☁ Synchronisation cloud
+  → Coller le token dans le champ
+  → Cliquer  ☁ Sauvegarder
+  → Message vert "Sauvegarde cloud réussie" ✓
+```
+
+**Fonctionnement :**
+- La 1ère sauvegarde crée un **Gist privé** nommé `flowmind-data.json` sur votre compte
+- Les suivantes mettent à jour le même Gist (pas de doublon)
+- Pour charger sur un autre PC : coller le même token → **☁ Charger**
+- Vérifiable sur [gist.github.com](https://gist.github.com)
+
+> ⚠ Le token est stocké dans le `localStorage` de votre navigateur — ne l'enregistrez pas dans les paramètres sur un PC partagé.
+
+---
+
+#### Option 3 — Fichier local synchronisé Nextcloud
+
+Si votre dossier est synchronisé par le client Nextcloud (nuage EN ou Nextcloud personnel), cette option écrit un fichier JSON directement dans ce dossier — Nextcloud le synchronise ensuite automatiquement dans le cloud.
+
+> Fonctionne uniquement sur **Chrome** et **Edge** (API File System Access).
+
+**Sauvegarder :**
+
+```
+  Paramètres → 📁 Sync fichier local
+  → Cliquer  📁 Sauvegarder dans un fichier
+  → Sélecteur de fichier s'ouvre
+  → Naviguer jusqu'au dossier Nextcloud synchronisé
+  → Nommer le fichier  flowmind-data.json  → Enregistrer
+  → Le client Nextcloud le synchronise dans le cloud ✓
+```
+
+**Charger sur un autre PC :**
+
+```
+  1. S'assurer que le client Nextcloud a synchronisé le fichier
+  2. Paramètres → 📁 Charger depuis un fichier
+  3. Sélectionner  flowmind-data.json  dans le dossier Nextcloud local
+  4. Confirmer la restauration
+```
+
+---
+
+### 📅 Import Zimbra / iCal
+
+#### Via URL (automatique)
+
+```
+  Zimbra → Préférences → Calendriers
+  → clic sur un calendrier → Partager → copier l'URL iCal (.ics)
+
+  FlowMind → Agenda → coller l'URL → Importer
+```
+
+> Si erreur CORS → utiliser la méthode par fichier.
+
+#### Via fichier .ics
+
+```
+  Zimbra → Fichier → Exporter → Format : iCalendar (.ics)
+
+  FlowMind → Agenda → Importer un fichier .ics → sélectionner le fichier
+```
+
+---
+
+## 🚀 Déploiement GitHub Pages
 
 ```bash
 git add .
-git commit -m "feat: FlowMind MVP v1.0"
-git branch -M main
-git remote add origin https://github.com/VOTRE-NOM/flowmind.git
-git push -u origin main
+git commit -m "feat: mise à jour FlowMind"
+git push origin master
 ```
 
-### Étape 3 — Activer GitHub Pages
-
-1. Aller dans votre dépôt sur [github.com](https://github.com)
-2. **Settings** → **Pages**
-3. Source : **Deploy from a branch**
-4. Branch : `main` / `/ (root)`
-5. Cliquer **Save**
-
-✅ Votre application sera accessible à :  
-`https://VOTRE-NOM.github.io/flowmind/`
-
----
-
-## 💡 Utilisation avec Zimbra
-
-### Via URL iCal (recommandé)
-
-1. Connectez-vous à votre Zimbra
-2. **Préférences** → **Calendriers**
-3. Cliquez sur le calendrier souhaité → **Partager**
-4. Copiez l'URL iCal (format `.ics`)
-5. Dans FlowMind → **Agenda** → Collez l'URL et cliquez **Importer**
-
-> ⚠ Si vous obtenez une erreur CORS, utilisez la méthode par fichier.
-
-### Via fichier .ics
-
-1. Dans Zimbra : **Fichier** → **Exporter**
-2. Format : **iCalendar (.ics)**
-3. Dans FlowMind → **Agenda** → **Importer un fichier .ics**
-
----
-
-## 🔄 Mises à jour et améliorations
-
-Toutes les données sont stockées dans le `localStorage` du navigateur.  
-Pour soumettre des retours d'usage, cliquez sur le bouton 💬 dans la barre supérieure.  
-Le fichier Markdown généré peut être soumis lors de la prochaine session de développement.
-
-### Évolutions prévues (v2)
-
-- [ ] Synchronisation optionnelle via Firebase / Supabase
-- [ ] Mode hors-ligne (PWA avec Service Worker)
-- [ ] Notifications bureau (Web Push)
-- [ ] Partage de projets entre utilisateurs
-- [ ] Intégration API REST Zimbra directe
+Pages → branche `master` / `/ (root)` → accessible à :
+`https://romaricponcin.github.io/Flowmind/`
 
 ---
 
@@ -125,21 +230,25 @@ Le fichier Markdown généré peut être soumis lors de la prochaine session de 
 
 ```
 flowmind/
-├── index.html          ← Point d'entrée, structure HTML
-├── config.json         ← Configuration par défaut (documentation)
-├── README.md           ← Ce fichier
+├── index.html               ← Structure HTML, toutes les vues
+├── README.md                ← Ce fichier
 ├── css/
-│   └── main.css        ← Styles, thèmes, animations
+│   ├── main.css             ← Variables, layout, thèmes de base
+│   ├── components.css       ← Boutons, inputs, modals, toggles
+│   ├── dashboard.css        ← Tableau de bord et listes de tâches
+│   ├── status-badges.css    ← Couleurs et badges par statut
+│   ├── focus-overlay.css    ← Panneau Mode Focus
+│   └── light-theme.css      ← Surcharges thème clair
 └── js/
-    ├── storage.js      ← Abstraction localStorage
-    ├── config.js       ← Gestion configuration & thème
-    ├── gamification.js ← XP, niveaux, récompenses, streaks
-    ├── timer.js        ← Minuterie Time Timer (anneau SVG)
-    ├── projects.js     ← CRUD projets, rendu
-    ├── tasks.js        ← CRUD tâches, décomposition, rendu
-    ├── ical.js         ← Parser iCal, import Zimbra
-    ├── reports.js      ← Rapports, export Markdown
-    └── app.js          ← Contrôleur principal, routage
+    ├── storage.js           ← localStorage + sync GitHub Gist
+    ├── config.js            ← Configuration & thème
+    ├── gamification.js      ← XP, niveaux, streaks
+    ├── timer.js             ← Minuterie Time Timer (anneau SVG)
+    ├── projects.js          ← CRUD projets
+    ├── tasks.js             ← CRUD tâches, récurrence, décomposition
+    ├── ical.js              ← Parser iCal, import Zimbra
+    ├── reports.js           ← Rapports, export Markdown
+    └── app.js               ← Contrôleur principal, routage, Focus
 ```
 
 ---
