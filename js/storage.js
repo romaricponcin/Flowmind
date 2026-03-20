@@ -10,6 +10,7 @@ const Storage = (() => {
     version: 1,
     projects: [],
     tasks: [],
+    memos: [],
     completedHistory: [],
     calendarEvents: [],
     xp: 0,
@@ -42,6 +43,11 @@ const Storage = (() => {
       } else {
         const data = JSON.parse(raw);
         state = deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), data);
+      }
+      // Injecter les données TNE-DRANE (données réelles) en priorité
+      if (typeof SeedTNEDrane !== 'undefined' && SeedTNEDrane.shouldSeed(state)) {
+        state = SeedTNEDrane.seed(state);
+        save(state);
       }
       // Injecter les données de démo si l'app est vide
       if (typeof Demo !== 'undefined' && Demo.shouldSeed(state)) {

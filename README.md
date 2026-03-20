@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.1.0** · Application web 100 % navigateur, sans serveur, sans installation.
+**v1.2.0** · Application web 100 % navigateur, sans serveur, sans installation.
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
@@ -13,6 +13,7 @@
 |---|---|
 | 🧠 TDA | Mode focus, décomposition micro-étapes, minuterie Time Timer |
 | 📁 Projets | Multi-projets colorés, statuts, priorités, échéances |
+| 📌 Mémos | Post-it par projet, épinglage tableau de bord, conversion en tâche |
 | 🔁 Récurrence | Tâches hebdo / mensuel / tous les X jours |
 | 📅 Agenda | Import Zimbra via URL iCal ou fichier `.ics` |
 | 📊 Rapports | Stats filtrées, export Markdown |
@@ -24,6 +25,39 @@
 ## 📖 Guide des fonctionnalités avancées
 
 > Les fonctionnalités simples (créer une tâche, changer de thème, gérer des projets) sont intuitives. Ce guide couvre uniquement ce qui nécessite quelques explications.
+
+---
+
+### 📌 Mémos post-it
+
+Chaque projet dispose d'un tableau de mémos (post-it colorés) accessible depuis la carte projet.
+
+#### Créer un mémo
+
+```
+  Vue Projets → clic sur l'icône 📝 (coin haut-droit de la carte)
+             → ou flèche "▼ X mémos" en bas de la carte
+  → Saisir le texte dans la zone de note rapide
+  → Choisir une couleur (pastille colorée)
+  → Entrée ou bouton "+ Ajouter"
+```
+
+#### Épingler un mémo sur le tableau de bord
+
+```
+  Sur la carte mémo → clic sur 📍  →  le mémo apparaît sur le Dashboard
+  Pour désépingler  → clic sur 📌
+```
+
+Les mémos épinglés s'affichent dans la section **"📌 Mémos épinglés"** du tableau de bord, avec le nom du projet source.
+
+#### Convertir un mémo en tâche
+
+```
+  Sur la carte mémo → clic sur "⚡→ Tâche"
+  → La modal de création de tâche s'ouvre, pré-remplie avec le texte du mémo
+  → Valider → le mémo est automatiquement supprimé
+```
 
 ---
 
@@ -238,6 +272,7 @@ flowmind/
 │   ├── dashboard.css        ← Tableau de bord et listes de tâches
 │   ├── status-badges.css    ← Couleurs et badges par statut
 │   ├── focus-overlay.css    ← Panneau Mode Focus
+│   ├── memos.css            ← Post-it : styles glassmorphism
 │   └── light-theme.css      ← Surcharges thème clair
 └── js/
     ├── storage.js           ← localStorage + sync GitHub Gist
@@ -246,10 +281,31 @@ flowmind/
     ├── timer.js             ← Minuterie Time Timer (anneau SVG)
     ├── projects.js          ← CRUD projets
     ├── tasks.js             ← CRUD tâches, récurrence, décomposition
+    ├── memos.js             ← CRUD mémos post-it, épinglage, conversion
+    ├── seed-tne-drane.js    ← Données réelles TNE-DRANE (mémos + tâches)
     ├── ical.js              ← Parser iCal, import Zimbra
     ├── reports.js           ← Rapports, export Markdown
     └── app.js               ← Contrôleur principal, routage, Focus
 ```
+
+---
+
+## 📝 Changelog
+
+### v1.2.0 — 2026-03-20
+- 📌 Module Mémos post-it par projet (création, couleur, rotation organique)
+- 🏠 Mémos épinglés visibles sur le tableau de bord
+- ⚡ Conversion mémo → tâche en un clic
+- 🎓 Données réelles TNE-DRANE pré-chargées au 1er lancement
+- 🔄 Bouton "Charger le projet TNE-DRANE" dans les paramètres
+- 🐛 Correction affichage badge "En cours" sur le dashboard
+
+### v1.1.0 — 2026-03-19
+- Synchronisation cloud GitHub Gist + sync fichier local
+- Aide intégrée (README)
+- Surlignage coloré par statut, boutons de statut renforcés
+- Mode Focus amélioré : panneau agrandi, durée personnalisée
+- Tâches récurrentes (hebdo / mensuel / tous les X jours)
 
 ---
 

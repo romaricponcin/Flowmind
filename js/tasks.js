@@ -6,6 +6,8 @@
 const Tasks = (() => {
   let _state = null;
   let _onUpdate = null;
+  // Callback exécuté après création (utilisé par la conversion de mémo)
+  let _pendingCreateCallback = null;
 
   const STATUSES = {
     todo:       { label: 'À faire',  short: 'À faire',  cls: 'status-todo',       dot: '#4e6080' },
@@ -296,10 +298,16 @@ const Tasks = (() => {
 
   // ── MODALS ────────────────────────────────────────
 
-  function showCreateModal(defaultProjectId) {
+  /**
+   * @param {string} defaultProjectId
+   * @param {object} prefill - { title?: string, onCreated?: function(task) }
+   */
+  function showCreateModal(defaultProjectId, prefill = {}) {
     const projects = Projects.getAll();
     if (!projects.length) { alert('Créez d\'abord un projet !'); return; }
-    App.showModal('Nouvelle tâche', `
+    _pendingCreateCallback = prefill.onCreated || null;
+    const modalTitle = prefill.title ? '⚡ Mémo → Tâche' : 'Nouvelle tâche';
+    App.showModal(modalTitle, `
       <div class="form-group"><label>Titre de la tâche</label><input type="text" class="glass-input" id="new-task-title" placeholder="Ex: Préparer la réunion du lundi" /></div>
       <div class="form-row">
         <div class="form-group"><label>Projet</label><select class="glass-select" id="new-task-project">${projects.map(p=>`<option value="${p.id}" ${p.id===defaultProjectId?'selected':''}>${_esc(p.name)}</option>`).join('')}</select></div>
@@ -342,7 +350,16 @@ const Tasks = (() => {
       { label:'+ Créer la tâche', cls:'btn-primary', action:_submitCreate }
     ]);
     setTimeout(()=>{
-      document.getElementById('new-task-title')?.focus();
+      const titleEl = document.getElementById('new-task-title');
+      if (titleEl) {
+        // Pré-remplir si conversion depuis un mémo
+        if (prefill.title) {
+          titleEl.value = prefill.title;
+          titleEl.select();
+        } else {
+          titleEl.focus();
+        }
+      }
       _bindDecomposeUI([]);
       document.getElementById('auto-decompose-btn').addEventListener('click',()=>{
         const title=document.getElementById('new-task-title').value.trim();
@@ -496,7 +513,12 @@ const Tasks = (() => {
     const subtasks=_readSubtasks();
     const recurrence=_readRecurrence('new');
     if(!title){alert('Le titre est requis.');return;}
-    create(projId,title,{status,priority,dueDate,timeEstimate:time,description:desc,subtasks,recurrence});
+    const task = create(projId,title,{status,priority,dueDate,timeEstimate:time,description:desc,subtasks,recurrence});
+    // Exécuter le callback post-création (ex: supprimer le mémo source)
+    if (_pendingCreateCallback && task) {
+      _pendingCreateCallback(task);
+      _pendingCreateCallback = null;
+    }
     App.closeModal(); App.refresh();
   }
 

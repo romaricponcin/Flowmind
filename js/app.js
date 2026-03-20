@@ -19,6 +19,7 @@ const App = (() => {
     Timer.init(_onTimerEnd, null);
     Projects.init(_state, saveState);
     Tasks.init(_state, saveState);
+    Memos.init(_state, saveState);
     ICal.init(_state, saveState);
     Reports.init(_state);
 
@@ -133,6 +134,7 @@ const App = (() => {
         Gamification.init(_state, saveState);
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
+        Memos.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -153,6 +155,7 @@ const App = (() => {
         Gamification.init(_state, saveState);
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
+        Memos.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -167,34 +170,28 @@ const App = (() => {
 
     // Load TNE project
     document.getElementById('load-tne-btn')?.addEventListener('click', () => {
-      if (typeof DemoTNE === 'undefined') { alert('Module DemoTNE non chargé.'); return; }
-      if (!DemoTNE.shouldSeed(_state)) {
-        showConfirm('Le projet TNE existe déjà. Voulez-vous le recréer ?', () => {
-          // Supprimer l'ancien projet TNE et ses tâches
-          const oldP = DemoTNE.getProject(_state);
-          if (oldP) {
-            _state.projects = _state.projects.filter(p => p.id !== oldP.id);
-            _state.tasks    = _state.tasks.filter(t => t.projectId !== oldP.id);
-          }
-          _state = DemoTNE.seed(_state);
-          Storage.save(_state);
-          Projects.init(_state, saveState);
-          Tasks.init(_state, saveState);
-          Projects.populateSelects();
-          Gamification.renderSidebar();
-          closeModal();
-          setTimeout(() => { _showView('dashboard'); }, 50);
-        });
-        return;
+      const doSeed = () => {
+        // Supprimer les données TNE existantes
+        const tneIds = ['seed_tne_drane', 'seed_pmb', 'seed_gar_dne'];
+        _state.projects = (_state.projects || []).filter(p => !tneIds.includes(p.id));
+        _state.tasks    = (_state.tasks    || []).filter(t => !tneIds.includes(t.projectId));
+        _state.memos    = (_state.memos    || []).filter(m => !tneIds.includes(m.projectId));
+        _state = SeedTNEDrane.seed(_state);
+        Storage.save(_state);
+        Projects.init(_state, saveState);
+        Tasks.init(_state, saveState);
+        Memos.init(_state, saveState);
+        Projects.populateSelects();
+        Gamification.renderSidebar();
+        closeModal();
+        setTimeout(() => { _showView('dashboard'); }, 50);
+        _setBackupStatus('✓ Projet TNE-DRANE chargé (mémos + tâches réels)', 'var(--mint)');
+      };
+      if (!SeedTNEDrane.shouldSeed(_state)) {
+        showConfirm('Le projet TNE-DRANE existe déjà. Voulez-vous le recréer ?', doSeed);
+      } else {
+        doSeed();
       }
-      _state = DemoTNE.seed(_state);
-      Storage.save(_state);
-      Projects.init(_state, saveState);
-      Tasks.init(_state, saveState);
-      Projects.populateSelects();
-      Gamification.renderSidebar();
-      setTimeout(() => { _showView('projects'); }, 50);
-      _setBackupStatus('✓ Projet TNE ajouté avec succès (10 tâches, 64 sous-tâches)', 'var(--mint)');
     });
 
     // Export backup
@@ -360,6 +357,10 @@ const App = (() => {
         ovList.appendChild(div);
       });
     }
+
+    // Mémos épinglés
+    const pinnedMemosEl = document.getElementById('dash-pinned-memos');
+    if (pinnedMemosEl) Memos.renderPinnedMemos(pinnedMemosEl);
 
     // Récents accomplis
     const recentList = document.getElementById('recent-done-list');
@@ -898,6 +899,7 @@ const App = (() => {
         Gamification.init(_state, saveState);
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
+        Memos.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();

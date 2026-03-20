@@ -8,10 +8,11 @@
   gap: 14px;
 }
 
-.dash-today { grid-column: 1; }
-.dash-next  { grid-column: 2; }
-.dash-projects { grid-column: 1; }
-.dash-recent  { grid-column: 2; }
+.dash-today           { grid-column: 1; grid-row: 1; }
+.dash-pinned-memos-card { grid-column: 2; grid-row: 1; }
+.dash-next            { grid-column: 1 / -1; }   /* pleine largeur, row auto */
+.dash-projects        { grid-column: 1; }
+.dash-recent          { grid-column: 2; }
 
 .glass-card { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
 
@@ -39,12 +40,14 @@
   flex: 1;
 }
 
-.stat-done { background: var(--success-dim); border: 1px solid rgba(0,217,166,0.2); }
-.stat-pending { background: var(--accent-dim); border: 1px solid var(--accent-border); }
+.stat-done       { background: var(--success-dim); border: 1px solid rgba(0,217,166,0.2); }
+.stat-pending    { background: var(--accent-dim);  border: 1px solid var(--accent-border); }
+.stat-inprogress { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.22); }
 
 .stat-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; line-height: 1; }
-.stat-done .stat-num { color: var(--success); }
-.stat-pending .stat-num { color: var(--accent); }
+.stat-done .stat-num       { color: var(--success); }
+.stat-pending .stat-num    { color: var(--accent); }
+.stat-inprogress .stat-num { color: #f59e0b; }
 
 .stat-lbl { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
 
@@ -324,7 +327,7 @@
 ═══════════════════════════════════════════════════ */
 
 /* ── DASHBOARD TASK LIST ─────────────────────────── */
-.dash-next { grid-column: 1 / -1; }
+/* dash-next est déjà défini en pleine largeur dans les règles principales */
 
 .task-count-selector {
   display: flex;

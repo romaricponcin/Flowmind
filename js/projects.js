@@ -89,6 +89,8 @@ const Projects = (() => {
     card.className = 'project-card fade-in';
     card.dataset.projectId = project.id;
 
+    const memoCount = typeof Memos !== 'undefined' ? Memos.getByProject(project.id).length : 0;
+
     card.innerHTML = `
       <div class="project-card-header">
         <div class="project-color-strip" style="background:${project.color}"></div>
@@ -99,6 +101,9 @@ const Projects = (() => {
         <div class="project-card-actions">
           <button class="glass-btn-icon btn-edit-project" data-id="${project.id}" title="Modifier">✎</button>
           <button class="glass-btn-icon btn-delete-project" data-id="${project.id}" title="Supprimer">🗑</button>
+          <button class="glass-btn-icon btn-memo-toggle" data-id="${project.id}" title="Mémos du projet">
+            <span class="memo-icon-shape"></span><span class="memo-toggle-badge${memoCount ? '' : ' badge-hidden'}" id="memo-badge-${project.id}">${memoCount || ''}</span>
+          </button>
           <button class="glass-btn-icon btn-toggle-project" data-id="${project.id}" title="Réduire/Développer">▾</button>
         </div>
       </div>
@@ -107,10 +112,19 @@ const Projects = (() => {
           <div class="progress-fill" style="width:${stats.pct}%; background:${project.color}"></div>
         </div>
       </div>
+      <div class="project-memos-board project-memos-board--top hidden" id="memos-board-top-${project.id}"></div>
       <div class="project-task-list" id="tasks-${project.id}"></div>
       <div class="add-task-row">
         <input type="text" class="glass-input new-task-input" data-project="${project.id}" placeholder="+ Nouvelle tâche dans ce projet…" />
         <button class="btn-secondary btn-add-task-quick" data-project="${project.id}">Ajouter</button>
+      </div>
+      <div class="project-memos-section">
+        <button class="project-memos-toggle" data-proj="${project.id}">
+          📝 Mémos
+          <span class="memo-count-badge" id="memo-badge-bottom-${project.id}">${memoCount}</span>
+          <span class="toggle-arrow">▾</span>
+        </button>
+        <div class="project-memos-board hidden" id="memos-board-${project.id}"></div>
       </div>
     `;
 
@@ -160,6 +174,32 @@ const Projects = (() => {
     addBtn.addEventListener('click', doAdd);
     newInput.addEventListener('keydown', e => { if (e.key === 'Enter') doAdd(); });
 
+    // Event: icône sticky-note (en-tête) → board du HAUT
+    const memoToggleBtn = card.querySelector('.btn-memo-toggle');
+    const memosBoardTop = card.querySelector(`#memos-board-top-${project.id}`);
+    if (memoToggleBtn && memosBoardTop && typeof Memos !== 'undefined') {
+      memoToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = memosBoardTop.classList.contains('hidden');
+        memosBoardTop.classList.toggle('hidden', !isHidden);
+        memoToggleBtn.classList.toggle('memo-toggle-active', isHidden);
+        if (isHidden) Memos.renderMemosBoard(project.id, memosBoardTop);
+      });
+    }
+
+    // Event: bouton bas → board du BAS
+    const memoToggleBottom = card.querySelector('.project-memos-toggle');
+    const memosBoardBottom = card.querySelector(`#memos-board-${project.id}`);
+    if (memoToggleBottom && memosBoardBottom && typeof Memos !== 'undefined') {
+      memoToggleBottom.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = memosBoardBottom.classList.contains('hidden');
+        memosBoardBottom.classList.toggle('hidden', !isHidden);
+        memoToggleBottom.classList.toggle('open', isHidden);
+        if (isHidden) Memos.renderMemosBoard(project.id, memosBoardBottom);
+      });
+    }
+
     return card;
   }
 
@@ -206,7 +246,7 @@ const Projects = (() => {
       </div>
       <div class="form-group">
         <label>Couleur</label>
-        <input type="color" class="input-color" id="edit-proj-color" value="${project.color}" class="glass-color" />
+        <input type="color" class="glass-color" id="edit-proj-color" value="${project.color}" />
       </div>
     `, [
       { label: 'Annuler', cls: 'btn-secondary', action: () => App.closeModal() },
