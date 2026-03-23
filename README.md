@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.2.0** · Application web 100 % navigateur, sans serveur, sans installation.
+**v1.3.0** · Application web 100 % navigateur, sans serveur, sans installation.
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
