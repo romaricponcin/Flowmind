@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /tmp)",
+      "Bash(unzip -q \"c:\\\\Users\\\\rponcin\\\\NUAGE.APPS\\\\PERSONNEL\\\\#1_Programmes Applications\\\\Flowmind\\\\Flowmind_prod\\\\Documents\\\\MEMO.docx\" -d memo_extract)",
+      "Bash(rm -rf memo_extract afaire_extract)",
+      "Bash(unzip -q \"c:\\\\Users\\\\rponcin\\\\NUAGE.APPS\\\\PERSONNEL\\\\#1_Programmes Applications\\\\Flowmind\\\\Flowmind_prod\\\\Documents\\\\A faire TNE.docx\" -d afaire_extract)",
+      "Read(//tmp/memo_extract/word/**)",
+      "Bash(sed 's/<[^>]*>//g')",
+      "Read(//tmp/afaire_extract/word/**)"
+    ]
+  }
+}
