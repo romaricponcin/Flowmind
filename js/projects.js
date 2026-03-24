@@ -15,6 +15,16 @@ const Projects = (() => {
   function init(state, onUpdate) {
     _state = state;
     _onUpdate = onUpdate;
+    _migrateData();
+  }
+
+  function _migrateData() {
+    if (!_state) return;
+    let changed = false;
+    (_state.projects || []).forEach(p => {
+      if (!p.status) { p.status = 'active'; changed = true; }
+    });
+    if (changed && _onUpdate) _onUpdate();
   }
 
   function getAll() {
@@ -31,6 +41,7 @@ const Projects = (() => {
       id: Storage.generateId(),
       name: name.trim(),
       color: color || PROJECT_COLORS[_state.projects.length % PROJECT_COLORS.length],
+      status: 'active',
       createdAt: new Date().toISOString()
     };
     _state.projects.push(project);
@@ -65,29 +76,78 @@ const Projects = (() => {
     };
   }
 
+  function _bindProjectControls() {
+    ['projects-sort', 'projects-filter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el._bound) {
+        el._bound = true;
+        el.addEventListener('change', renderProjectsView);
+      }
+    });
+  }
+
   function renderProjectsView() {
     const container = document.getElementById('projects-list');
     if (!container || !_state) return;
+    _bindProjectControls();
     container.innerHTML = '';
 
-    if (!_state.projects.length) {
-      container.innerHTML = '<div class="empty-state">Aucun projet. Créez votre premier projet !</div>';
+    const sortBy   = document.getElementById('projects-sort')?.value  || 'status';
+    const filterBy = document.getElementById('projects-filter')?.value || 'all';
+
+    let projects = filterBy === 'all'
+      ? [..._state.projects]
+      : _state.projects.filter(p => (p.status || 'active') === filterBy);
+
+    if (!projects.length) {
+      container.innerHTML = '<div class="empty-state">Aucun projet correspondant.</div>';
       return;
     }
 
-    _state.projects.forEach(project => {
-      const card = _buildProjectCard(project);
-      container.appendChild(card);
-    });
+    const statusOrder = { active: 0, paused: 1, done: 2 };
+    if (sortBy === 'status') {
+      projects.sort((a, b) => (statusOrder[a.status || 'active'] - statusOrder[b.status || 'active']) || a.name.localeCompare(b.name));
+    } else if (sortBy === 'name') {
+      projects.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === 'progress') {
+      projects.sort((a, b) => getStats(b.id).pct - getStats(a.id).pct);
+    } else if (sortBy === 'created') {
+      projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    if (sortBy === 'status' && filterBy === 'all') {
+      const active = projects.filter(p => (p.status || 'active') !== 'done');
+      const done   = projects.filter(p => p.status === 'done');
+      active.forEach(p => container.appendChild(_buildProjectCard(p)));
+      if (done.length) {
+        const sep = document.createElement('div');
+        sep.className = 'projects-group-sep';
+        sep.innerHTML = `<span>Terminés (${done.length})</span>`;
+        container.appendChild(sep);
+        done.forEach(p => container.appendChild(_buildProjectCard(p)));
+      }
+    } else {
+      projects.forEach(p => container.appendChild(_buildProjectCard(p)));
+    }
   }
+
+  const _STATUS_CFG = {
+    active: { badge: null,                                                                                     btnIcon: '⏸', btnTitle: 'Mettre en pause', next: 'paused' },
+    paused: { badge: '<span class="project-status-badge badge-paused">En pause</span>',                       btnIcon: '▶', btnTitle: 'Remettre en actif', next: 'active' },
+    done:   { badge: '<span class="project-status-badge badge-done">Terminé ✓</span>',                        btnIcon: '↩', btnTitle: 'Remettre en actif', next: 'active' },
+  };
 
   function _buildProjectCard(project) {
     const tasks = _state.tasks.filter(t => t.projectId === project.id && !t.completedAt);
     const stats = getStats(project.id);
+    const status = project.status || 'active';
+    const scfg = _STATUS_CFG[status] || _STATUS_CFG.active;
+    const isDone = status === 'done';
 
     const card = document.createElement('div');
     card.className = 'project-card fade-in';
     card.dataset.projectId = project.id;
+    card.dataset.status = status;
 
     const memoCount = typeof Memos !== 'undefined' ? Memos.getByProject(project.id).length : 0;
 
@@ -96,15 +156,16 @@ const Projects = (() => {
         <div class="project-color-strip" style="background:${project.color}"></div>
         <div class="project-info">
           <div class="project-name">${_esc(project.name)}</div>
-          <div class="project-stats">${stats.done}/${stats.total} tâches · ${stats.pct}%</div>
+          <div class="project-stats">${stats.done}/${stats.total} tâches · ${stats.pct}%${scfg.badge ? ' ' + scfg.badge : ''}</div>
         </div>
         <div class="project-card-actions">
+          <button class="glass-btn-icon btn-project-status" data-id="${project.id}" data-next="${scfg.next}" title="${scfg.btnTitle}">${scfg.btnIcon}</button>
           <button class="glass-btn-icon btn-edit-project" data-id="${project.id}" title="Modifier">✎</button>
           <button class="glass-btn-icon btn-delete-project" data-id="${project.id}" title="Supprimer">🗑</button>
           <button class="glass-btn-icon btn-memo-toggle" data-id="${project.id}" title="Mémos du projet">
             <span class="memo-icon-shape"></span><span class="memo-toggle-badge${memoCount ? '' : ' badge-hidden'}" id="memo-badge-${project.id}">${memoCount || ''}</span>
           </button>
-          <button class="glass-btn-icon btn-toggle-project" data-id="${project.id}" title="Réduire/Développer">▾</button>
+          <button class="glass-btn-icon btn-toggle-project" data-id="${project.id}" title="Réduire/Développer">${isDone ? '▸' : '▾'}</button>
         </div>
       </div>
       <div class="project-progress-wrap">
@@ -113,8 +174,8 @@ const Projects = (() => {
         </div>
       </div>
       <div class="project-memos-board project-memos-board--top hidden" id="memos-board-top-${project.id}"></div>
-      <div class="project-task-list" id="tasks-${project.id}"></div>
-      <div class="add-task-row">
+      <div class="project-task-list" id="tasks-${project.id}"${isDone ? ' style="display:none"' : ''}></div>
+      <div class="add-task-row"${isDone ? ' style="display:none"' : ''}>
         <input type="text" class="glass-input new-task-input" data-project="${project.id}" placeholder="+ Nouvelle tâche dans ce projet…" />
         <button class="btn-secondary btn-add-task-quick" data-project="${project.id}">Ajouter</button>
       </div>
@@ -131,6 +192,14 @@ const Projects = (() => {
     // Render tasks
     const taskList = card.querySelector(`#tasks-${project.id}`);
     Tasks.renderTaskList(project.id, taskList);
+
+    // Event: change project status
+    card.querySelector('.btn-project-status').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nextStatus = e.currentTarget.dataset.next;
+      update(project.id, { status: nextStatus });
+      App.refresh();
+    });
 
     // Event: toggle collapse
     card.querySelector('.btn-toggle-project').addEventListener('click', (e) => {
@@ -283,6 +352,6 @@ const Projects = (() => {
 
   return {
     init, getAll, getById, create, update, remove, getStats,
-    renderProjectsView, showCreateModal, populateSelects
+    renderProjectsView, showCreateModal, populateSelects, bindProjectControls: _bindProjectControls
   };
 })();

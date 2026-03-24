@@ -87,6 +87,19 @@ const Tasks = (() => {
     } else {
       task.completedAt = null;
     }
+    // Auto-update project status (avant _onUpdate pour que le re-rendu soit correct)
+    if (task.projectId && _state.projects) {
+      const project = _state.projects.find(p => p.id === task.projectId);
+      if (project) {
+        const projectTasks = _state.tasks.filter(t => t.projectId === task.projectId);
+        const allDone = projectTasks.length > 0 && projectTasks.every(t => t.status === 'done');
+        if (allDone && project.status !== 'done') {
+          project.status = 'done';
+        } else if (!allDone && project.status === 'done') {
+          project.status = 'active';
+        }
+      }
+    }
     if (_onUpdate) _onUpdate();
     return task;
   }
@@ -109,9 +122,15 @@ const Tasks = (() => {
     if (!sub) return;
     sub.status = newStatus;
     sub.completedAt = newStatus === 'done' ? new Date().toISOString() : null;
-    if (_onUpdate) _onUpdate();
     if (newStatus === 'done') Gamification.awardTask(true);
-    if (task.subtasks.length > 0 && task.subtasks.every(s => s.status === 'done')) setStatus(taskId, 'done');
+    const allSubDone = task.subtasks.length > 0 && task.subtasks.every(s => s.status === 'done');
+    if (allSubDone) {
+      setStatus(taskId, 'done');         // cascade : tâche done → projet done
+    } else if (newStatus !== 'done' && task.status === 'done') {
+      setStatus(taskId, 'inprogress');   // retour arrière : tâche → inprogress → projet → active
+    } else {
+      if (_onUpdate) _onUpdate();
+    }
   }
 
   function completeSubtask(taskId, subtaskId) {

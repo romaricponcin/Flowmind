@@ -1,0 +1,1182 @@
+{
+  "version": "flowmind-backup-v1",
+  "exportedAt": "2026-03-23T16:00:24.396Z",
+  "exportedBy": "FlowMind",
+  "data": {
+    "version": 1,
+    "projects": [
+      {
+        "id": "mmyun7pwojy6z",
+        "name": "Rapport Annuel TNE",
+        "color": "#4f8eff",
+        "createdAt": "2026-02-18T09:00:00.000Z",
+        "status": "done"
+      },
+      {
+        "id": "seed_tne_drane",
+        "name": "TNE - DRANE",
+        "color": "#00d4ff",
+        "createdAt": "2025-09-01T08:00:00.000Z",
+        "status": "active"
+      },
+      {
+        "id": "seed_pmb",
+        "name": "PMB",
+        "color": "#f59e0b",
+        "createdAt": "2025-09-01T08:01:00.000Z",
+        "status": "active"
+      },
+      {
+        "id": "seed_gar_dne",
+        "name": "GAR - DNE",
+        "color": "#a78bfa",
+        "createdAt": "2025-09-01T08:02:00.000Z",
+        "status": "active"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "mmyun7pw0iba8",
+        "projectId": "mmyun7pwojy6z",
+        "title": "Collecter les données financières Q4",
+        "description": "Rassembler les bilans, comptes de résultat et tableaux de flux de trésorerie auprès de la comptabilité.",
+        "priority": "high",
+        "status": "done",
+        "dueDate": "2026-03-15",
+        "completedAt": "2026-03-17T09:00:00.000Z",
+        "timeEstimate": 90,
+        "createdAt": "2026-03-05T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmyun7pxullmw",
+            "title": "Contacter la comptabilité",
+            "estimateMin": 15,
+            "status": "deferred",
+            "completedAt": null
+          },
+          {
+            "id": "mmyun7pxfqcls",
+            "title": "Récupérer les fichiers Excel",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-19T09:00:00.000Z"
+          },
+          {
+            "id": "mmyun7pxndrh1",
+            "title": "Vérifier la cohérence des chiffres",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-19T09:00:00.000Z"
+          },
+          {
+            "id": "mmyun7pxbhri8",
+            "title": "Archiver les pièces justificatives",
+            "estimateMin": 15,
+            "status": "done",
+            "completedAt": "2026-03-19T09:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "mmyun7px5za4k",
+        "projectId": "seed_tne_drane",
+        "title": "Rédiger la synthèse exécutive",
+        "description": "Résumé de 2 pages destiné aux membres du conseil d'administration.",
+        "priority": "high",
+        "status": "inprogress",
+        "dueDate": "2026-04-27",
+        "completedAt": null,
+        "timeEstimate": 120,
+        "createdAt": "2026-03-10T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmyun7pxibk3w",
+            "title": "Définir le plan et les messages clés",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmyun7pxcdoig",
+            "title": "Rédiger le premier jet",
+            "estimateMin": 45,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmyun7pxdlewi",
+            "title": "Intégrer les indicateurs clés (KPI)",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmyun7pxg64sm",
+            "title": "Relecture et validation DG",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          }
+        ],
+        "recurrence": null
+      },
+      {
+        "id": "mmyun7px2nzji",
+        "projectId": "seed_tne_drane",
+        "title": "Créer les graphiques et visualisations",
+        "description": "Graphiques d'évolution CA, répartition budgétaire et comparatif N-1.",
+        "priority": "medium",
+        "status": "todo",
+        "dueDate": "2026-04-28",
+        "completedAt": null,
+        "timeEstimate": 90,
+        "createdAt": "2026-03-12T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mn3barrk4sk59",
+            "title": "Chiffres clés à définir",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mn3bb2p9p0qys",
+            "title": "Elaborer graphiques",
+            "estimateMin": 35,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mn3bbhh6tso1s",
+            "title": "Contrôler les chiffres",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mn3bbxhboqr8r",
+            "title": "Mise en ligne / grist / Olivier M",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          }
+        ],
+        "recurrence": null
+      },
+      {
+        "id": "mmyun7pxeaqw8",
+        "projectId": "mmyun7pwojy6z",
+        "title": "Réunion de revue avec le comité",
+        "description": "Présentation des résultats et recueil des observations.",
+        "priority": "low",
+        "status": "done",
+        "dueDate": "2026-04-03",
+        "completedAt": "2026-03-20T17:41:40.467Z",
+        "timeEstimate": 60,
+        "createdAt": "2026-03-18T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmyun7pxk3l19",
+            "title": "Envoyer les convocations",
+            "estimateMin": 10,
+            "status": "done",
+            "completedAt": "2026-03-23T15:03:31.051Z"
+          },
+          {
+            "id": "mmyun7pxg894y",
+            "title": "Préparer les supports de salle",
+            "estimateMin": 15,
+            "status": "done",
+            "completedAt": "2026-03-23T15:03:25.900Z"
+          },
+          {
+            "id": "mmyun7pxihy3p",
+            "title": "Rédiger le compte-rendu",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-23T15:03:28.614Z"
+          }
+        ]
+      },
+      {
+        "id": "mmyuq4cwdkjql",
+        "projectId": "seed_tne_drane",
+        "title": "Vérifier les brouillons dans SOFIA tous les vendredis 9h-10h",
+        "description": "",
+        "subtasks": [],
+        "priority": "high",
+        "dueDate": "2026-03-27",
+        "status": "todo",
+        "completedAt": null,
+        "timeEstimate": 25,
+        "createdAt": "2026-03-20T12:04:38.672Z",
+        "tags": [],
+        "recurrence": {
+          "startDate": "2026-03-27",
+          "endDate": "2026-07-31",
+          "type": "weekly",
+          "interval": 7
+        }
+      },
+      {
+        "id": "stask_d01",
+        "projectId": "seed_tne_drane",
+        "title": "Voir avec Joel — Formation Olivier Baron 27/11",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-27T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:00:00.000Z"
+      },
+      {
+        "id": "stask_d02",
+        "projectId": "seed_tne_drane",
+        "title": "Contacter collège Fraissinet — annulation 06/11",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-06T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:01:00.000Z"
+      },
+      {
+        "id": "stask_d03",
+        "projectId": "seed_tne_drane",
+        "title": "Groupe 16 AM — demander basculement sur matin (fiche accord CE)",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-10T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:02:00.000Z"
+      },
+      {
+        "id": "stask_d04",
+        "projectId": "seed_tne_drane",
+        "title": "Groupe 4 annulé (Réseau Colline) — groupe supprimé",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-10T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:03:00.000Z"
+      },
+      {
+        "id": "stask_d05",
+        "projectId": "seed_tne_drane",
+        "title": "Groupe 70679 — Grp 1 → Grp 2, stagiaires hors-périmètre",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-12T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:04:00.000Z"
+      },
+      {
+        "id": "stask_d06",
+        "projectId": "seed_tne_drane",
+        "title": "Chercher Chassaignon Ginette — positionner en 04 (OK trouvé)",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-14T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:05:00.000Z"
+      },
+      {
+        "id": "stask_d07",
+        "projectId": "seed_tne_drane",
+        "title": "Chercher EPLE sur Avignon pour formation du 06/11",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-05T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:06:00.000Z"
+      },
+      {
+        "id": "stask_d08",
+        "projectId": "seed_tne_drane",
+        "title": "Vérifier formations 70678/70679/70777 — CE préinscrits OK",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-15T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:07:00.000Z"
+      },
+      {
+        "id": "stask_d09",
+        "projectId": "seed_tne_drane",
+        "title": "Trouver fichier Philippe (Teams) — pilotes/responsables modules",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-11-18T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:08:00.000Z"
+      },
+      {
+        "id": "stask_d10",
+        "projectId": "seed_tne_drane",
+        "title": "LIEN — rétro planning niveau 1 avant vacances de février",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2026-01-31T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:09:00.000Z"
+      },
+      {
+        "id": "stask_d11",
+        "projectId": "seed_tne_drane",
+        "title": "Passer groupes 70777/70679 en statut 2 + ajouter CE + enlever Alexandra + envoyer à IVY",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-12-01T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:10:00.000Z"
+      },
+      {
+        "id": "stask_d12",
+        "projectId": "seed_tne_drane",
+        "title": "Gestion groupes régionaux (Haut-Vaucluse, Garlaban, La Crau, Luberon, Portes des Alpes)",
+        "status": "done",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": "2025-12-15T10:00:00.000Z",
+        "createdAt": "2025-11-01T08:11:00.000Z"
+      },
+      {
+        "id": "stask_p01",
+        "projectId": "seed_tne_drane",
+        "title": "Vitrolles — Préparation événement 26 mai-2 juin",
+        "status": "inprogress",
+        "priority": "high",
+        "dueDate": "2026-05-26",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T08:00:00.000Z"
+      },
+      {
+        "id": "stask_p02",
+        "projectId": "seed_tne_drane",
+        "title": "École-collège / Café IA — Ligue enseignement, projets et ateliers, élèves 6ème",
+        "status": "inprogress",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T08:01:00.000Z"
+      },
+      {
+        "id": "stask_p03",
+        "projectId": "seed_tne_drane",
+        "title": "Communication séminaire IA — Florence / Isabelle / Romaric / Caroline",
+        "status": "inprogress",
+        "priority": "high",
+        "dueDate": "2026-03-25",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T08:02:00.000Z"
+      },
+      {
+        "id": "stask_p04",
+        "projectId": "seed_tne_drane",
+        "title": "Séminaire 04/02 — formateurs, ateliers, organisation, programme",
+        "status": "inprogress",
+        "priority": "high",
+        "dueDate": "2026-02-04",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T08:03:00.000Z"
+      },
+      {
+        "id": "stask_t01",
+        "projectId": "seed_tne_drane",
+        "title": "Trouver numéros modules LIEN (70681-70684, 70778-70779)",
+        "status": "todo",
+        "priority": "high",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t01a",
+            "title": "Vérifier 70681 niv1 Vaucluse DEP",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t01b",
+            "title": "Vérifier 70682 niv1 04-05 Acad",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t01c",
+            "title": "Vérifier 70683 niv2 Vaucluse",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t01d",
+            "title": "Vérifier 70684 niv2 04-05 Acad",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t01e",
+            "title": "Vérifier 70778 RV LIEN niv1",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t01f",
+            "title": "Vérifier 70779 RV LIEN niv2",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:00:00.000Z"
+      },
+      {
+        "id": "stask_t02",
+        "projectId": "seed_tne_drane",
+        "title": "VR niveau 0 — Transmettre listes stagiaires aux établissements",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2025-11-03",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:01:00.000Z"
+      },
+      {
+        "id": "stask_t03",
+        "projectId": "seed_tne_drane",
+        "title": "VR niveau 0 — Mail annulation stagiaires via SOFIA",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2025-11-04",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:02:00.000Z"
+      },
+      {
+        "id": "stask_t04",
+        "projectId": "seed_tne_drane",
+        "title": "VR LIEN — Trouver emails stagiaires niveau 0 par dates",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2025-11-07",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:03:00.000Z"
+      },
+      {
+        "id": "stask_t05",
+        "projectId": "seed_tne_drane",
+        "title": "Retrouver volume vacations PAF 2024-2025 pour budget T2",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:04:00.000Z"
+      },
+      {
+        "id": "stask_t06",
+        "projectId": "seed_tne_drane",
+        "title": "COPIL SEMINAIRE TNE — Trouver emails mairies",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:05:00.000Z"
+      },
+      {
+        "id": "stask_t07",
+        "projectId": "seed_tne_drane",
+        "title": "LP René Caillé (70782 Grp07 / 74028 Grp02) — programme janvier/février",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-01-30",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:06:00.000Z"
+      },
+      {
+        "id": "stask_t08",
+        "projectId": "seed_tne_drane",
+        "title": "NIVEAU 2 LIEN — 4 formations régionales",
+        "status": "todo",
+        "priority": "high",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t08a",
+            "title": "Aix",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t08b",
+            "title": "Miramas",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t08c",
+            "title": "La Ciotat",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t08d",
+            "title": "Marseille",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t08e",
+            "title": "Pertuis (autres dép)",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:07:00.000Z"
+      },
+      {
+        "id": "stask_t09",
+        "projectId": "seed_tne_drane",
+        "title": "Niveau 1 LIEN — Supprimer Etoile/Salon, regrouper Camargues à Salon",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t09a",
+            "title": "Supprimer Etoile",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t09b",
+            "title": "Supprimer Salon",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t09c",
+            "title": "Regrouper Camargues à Salon",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t09d",
+            "title": "Contacter Sandrine sur périmètre DEP",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:08:00.000Z"
+      },
+      {
+        "id": "stask_t10",
+        "projectId": "seed_tne_drane",
+        "title": "Basculer niveau 1 fermés en dates niveau 2 (70778 — fermer sauf grp 5,6,12,13)",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t10a",
+            "title": "Fermer groupes non retenus",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t10b",
+            "title": "Récupérer stagiaires",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t10c",
+            "title": "Prévenir établissements accueil",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:09:00.000Z"
+      },
+      {
+        "id": "stask_t11",
+        "projectId": "seed_tne_drane",
+        "title": "CSI Jacques Chirac PFE — Créer module LIEN 04/05 et 84 (voir Philippe)",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:10:00.000Z"
+      },
+      {
+        "id": "stask_t12",
+        "projectId": "seed_tne_drane",
+        "title": "Modifications modules email Sandrine (3 actions)",
+        "status": "todo",
+        "priority": "high",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t12a",
+            "title": "Supprimer \"raison hiérarchique\" sur 70683",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t12b",
+            "title": "Modifier 70778 : 13 → 4 groupes réseau",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t12c",
+            "title": "Modifier 70779 : 13 → 4 groupes DEP",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t12d",
+            "title": "Créer 74416 LIEN Niv1 DEP13 4 grp",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t12e",
+            "title": "Créer module LIEN langues immersives DEP13",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t12f",
+            "title": "Créer module LIEN langues 84-04-05 Acad",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:11:00.000Z"
+      },
+      {
+        "id": "stask_t13",
+        "projectId": "seed_tne_drane",
+        "title": "GT Perdir IA — Créer groupe + 2 sessions (25/11 + 02/04/2026) + ajouter stagiaires",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2025-11-25",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:12:00.000Z"
+      },
+      {
+        "id": "stask_t14",
+        "projectId": "seed_tne_drane",
+        "title": "Écrire aux intervenants Séminaire IA 04/02 — modalités déplacement",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-01-20",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:13:00.000Z"
+      },
+      {
+        "id": "stask_t15",
+        "projectId": "seed_tne_drane",
+        "title": "PMB services — Déposer les factures",
+        "status": "todo",
+        "priority": "high",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:14:00.000Z"
+      },
+      {
+        "id": "stask_t16",
+        "projectId": "seed_tne_drane",
+        "title": "Séminaire 04/02 (70752) — Créer module + 105 stagiaires + préinscription",
+        "status": "todo",
+        "priority": "high",
+        "dueDate": "2026-02-04",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:15:00.000Z"
+      },
+      {
+        "id": "stask_t17",
+        "projectId": "seed_tne_drane",
+        "title": "COSTRAT 12/02 — Sortir chiffres individuelle/PFE",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-02-12",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:16:00.000Z"
+      },
+      {
+        "id": "stask_t18",
+        "projectId": "seed_tne_drane",
+        "title": "Séminaire IA 25/03 — Retirer préinscrits (Covello, Delattre, Levêque, Buffard)",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-03-20",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:17:00.000Z"
+      },
+      {
+        "id": "stask_t19",
+        "projectId": "seed_tne_drane",
+        "title": "Envoyer tous liens de préinscriptions après création modules",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:18:00.000Z"
+      },
+      {
+        "id": "stask_t20",
+        "projectId": "seed_tne_drane",
+        "title": "Modules Aix points cardinaux (11/03, 12/03, 25/03, 26/03) — identifier modules",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-03-11",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:19:00.000Z"
+      },
+      {
+        "id": "stask_t21",
+        "projectId": "seed_tne_drane",
+        "title": "NIVEAU 2 — Créer 4 groupes points cardinaux (01-04) dans modules DEP",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": null,
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:20:00.000Z"
+      },
+      {
+        "id": "stask_t22",
+        "projectId": "seed_tne_drane",
+        "title": "70757 VR Métiers — Créer 2ème session 29 janvier",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-01-29",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:21:00.000Z"
+      },
+      {
+        "id": "stask_t23",
+        "projectId": "seed_tne_drane",
+        "title": "LIEN Grp 13 (11/02) + Grp 12 (05/02) — formateurs et établissements",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-02-05",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [
+          {
+            "id": "ss_t23a",
+            "title": "Grp 13 : Geoffroy – Clg Sophie Germain",
+            "done": false,
+            "status": "todo"
+          },
+          {
+            "id": "ss_t23b",
+            "title": "Grp 12 : Laura Miousset + établissement",
+            "done": false,
+            "status": "todo"
+          }
+        ],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:22:00.000Z"
+      },
+      {
+        "id": "stask_t24",
+        "projectId": "seed_tne_drane",
+        "title": "Niveau 2 (74417) — 27/04 Benedicte Faury Lycée Vauvenargues",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-04-27",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:23:00.000Z"
+      },
+      {
+        "id": "stask_t25",
+        "projectId": "seed_tne_drane",
+        "title": "Niveau 2 (74418) — 28/04 Benedicte Faury — chercher étab Pertuis/Meyragues",
+        "status": "todo",
+        "priority": "medium",
+        "dueDate": "2026-04-28",
+        "timeEstimate": null,
+        "description": "",
+        "subtasks": [],
+        "recurrence": null,
+        "completedAt": null,
+        "createdAt": "2026-01-01T09:24:00.000Z"
+      },
+      {
+        "id": "mn3b7hhvh5im4",
+        "projectId": "seed_tne_drane",
+        "title": "Imprimer liste des stagiaire",
+        "description": "",
+        "subtasks": [
+          {
+            "id": "mn3b6zl324fmy",
+            "title": "Faire le point des listes",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mn3b774anhr75",
+            "title": "Valider avec Gérard",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mn3b7c6c9h07e",
+            "title": "Imprimer",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          }
+        ],
+        "priority": "high",
+        "dueDate": "2026-03-24",
+        "status": "todo",
+        "completedAt": null,
+        "timeEstimate": 35,
+        "createdAt": "2026-03-23T14:57:07.411Z",
+        "tags": [],
+        "recurrence": null
+      }
+    ],
+    "memos": [
+      {
+        "id": "smemo_01",
+        "projectId": "seed_tne_drane",
+        "text": "Procédure paiement formateurs\n• CAS 1 – Benoit Leroux : vacations via SOFIA\n• CAS 2 / CAS 3 – Sandrine : devis + défrayé\nVacations → devis → défrayé selon profil formateur",
+        "colorId": "yellow",
+        "rotation": -1.2,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:00:00.000Z"
+      },
+      {
+        "id": "smemo_02",
+        "projectId": "seed_tne_drane",
+        "text": "Outil élaboration PAF 2026\n• Mdp : elabpraf26\n• Phase dialogue fermée 27/04\n• Champs jaunes obligatoires avant 27/04\n• Calcul JSA après saisie",
+        "colorId": "peach",
+        "rotation": 1.8,
+        "pinned": true,
+        "createdAt": "2025-09-01T09:01:00.000Z"
+      },
+      {
+        "id": "smemo_03",
+        "projectId": "seed_tne_drane",
+        "text": "Réunion DANE/DNE 11/03\n• Bascule Worldline → DOCAPOSTE 18-20/03\n• Nouveau module stats mi-avril\n• Suivi migration à anticiper",
+        "colorId": "pink",
+        "rotation": -2.5,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:02:00.000Z"
+      },
+      {
+        "id": "smemo_04",
+        "projectId": "seed_tne_drane",
+        "text": "Circuit PFE\nCE demande → CIF réseau → Sophie Loudières (création SOFIA) → Sandrine C → DRANE\nValidation étape par étape",
+        "colorId": "lavender",
+        "rotation": 0.9,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:03:00.000Z"
+      },
+      {
+        "id": "smemo_05",
+        "projectId": "seed_tne_drane",
+        "text": "Contacts clés\n• Benoit Leroux – CAS1\n• Sandrine – EAFC\n• Romaric – TNE 13\n• Philippe – autres dép\n• Sophie Loudières – CIF PFE\n• Laurent Prevaut Uptale : laurent@uptale.io",
+        "colorId": "blue",
+        "rotation": -0.7,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:04:00.000Z"
+      },
+      {
+        "id": "smemo_06",
+        "projectId": "seed_tne_drane",
+        "text": "19/03 Sandrine EAFC\n• Arbitrage historique antérieur\n• Prévoir 2 outils : enveloppe validée + saisie\n• À coordonner avec Sandrine avant fin mars",
+        "colorId": "yellow",
+        "rotation": 2.1,
+        "pinned": true,
+        "createdAt": "2025-09-01T09:05:00.000Z"
+      },
+      {
+        "id": "smemo_07",
+        "projectId": "seed_tne_drane",
+        "text": "TNE volet formation / LIEN\n• 14 sessions → 7 mises en place\n• Rétro planning niv1 avant fév / niv2 après\n• Comm lettre hebdo à prévoir",
+        "colorId": "green",
+        "rotation": -1.6,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:06:00.000Z"
+      },
+      {
+        "id": "smemo_08",
+        "projectId": "seed_tne_drane",
+        "text": "PFE organisation\n• Romaric : TNE13\n• Philippe : autres dép\n• SOFIA : supervision\n• Chefs de projets + suivi Sandrine",
+        "colorId": "blue",
+        "rotation": 1.3,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:07:00.000Z"
+      },
+      {
+        "id": "smemo_09",
+        "projectId": "seed_tne_drane",
+        "text": "NIVEAU 2 ENT/LIEN\n• 4 réseaux : Aix / Miramas / La Ciotat / Marseille\n• + Pertuis\n• Prendre dates tardives + rétro planning obligatoire",
+        "colorId": "lavender",
+        "rotation": -3,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:08:00.000Z"
+      },
+      {
+        "id": "smemo_10",
+        "projectId": "seed_tne_drane",
+        "text": "VR collectif\n• Créer module \"Réalité virtuelle\"\n• Décliner LIEN / SYMSPRAY / autres thèmes\n• Selon demandes établissements",
+        "colorId": "peach",
+        "rotation": 0.4,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:09:00.000Z"
+      },
+      {
+        "id": "smemo_11",
+        "projectId": "seed_tne_drane",
+        "text": "Formation 1D\n• Yves Notin (4 formateurs TNE)\n• 369 + 104 écoles Marseille\n• ERUNs hors-Marseille : Noelle Bulteel, Vanessa Fanciello",
+        "colorId": "pink",
+        "rotation": -0.8,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:10:00.000Z"
+      },
+      {
+        "id": "smemo_12",
+        "projectId": "seed_tne_drane",
+        "text": "Individuelle UPTALE\n• Mettre nom en pilote ET intervenant\n• Sélectionner stagiaires dans SOFIA\n• Envoyer liste BDR13 à Laurent Prevaut",
+        "colorId": "green",
+        "rotation": 2.7,
+        "pinned": false,
+        "createdAt": "2025-09-01T09:11:00.000Z"
+      }
+    ],
+    "completedHistory": [
+      {
+        "taskId": "mmyun7pw0iba8",
+        "title": "Collecter les données financières Q4",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-17T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7pw0iba8",
+        "title": "Collecter les données financières Q4",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-17T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7pw0iba8",
+        "title": "Collecter les données financières Q4",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-17T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7pxeaqw8",
+        "title": "Réunion de revue avec le comité",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-20T17:41:40.467Z"
+      },
+      {
+        "taskId": "mmyun7pxeaqw8",
+        "title": "Réunion de revue avec le comité",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-20T17:41:40.467Z"
+      },
+      {
+        "taskId": "mmyun7pxlq22s",
+        "title": "Module 1 — Bases du langage",
+        "projectId": "mmyun7pwxr3jc",
+        "completedAt": "2026-03-14T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7px9plmr",
+        "title": "Wireframes des nouvelles pages",
+        "projectId": "mmyun7pwmlrh7",
+        "completedAt": "2026-03-15T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7pxhz6rx",
+        "title": "Audit UX de l'existant",
+        "projectId": "mmyun7pwmlrh7",
+        "completedAt": "2026-03-12T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmyun7pw0iba8",
+        "title": "Collecter les données financières Q4",
+        "projectId": "mmyun7pwojy6z",
+        "completedAt": "2026-03-17T09:00:00.000Z"
+      }
+    ],
+    "calendarEvents": [],
+    "xp": 205,
+    "level": 2,
+    "streak": 11,
+    "lastActiveDate": "2026-03-23",
+    "feedbacks": [],
+    "config": {
+      "accentColor": "#9b49df",
+      "successColor": "#10b981",
+      "theme": "light",
+      "pomodoroMin": 25,
+      "breakShortMin": 5,
+      "sound": "bell",
+      "oneTaskFocus": true,
+      "microstepMaxMin": 15,
+      "notifications": true,
+      "xpPerTask": 10,
+      "xpPerSubtask": 5,
+      "animations": true
+    }
+  }
+}

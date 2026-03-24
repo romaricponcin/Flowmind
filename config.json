@@ -1,6 +1,6 @@
 {
   "_comment": "Fichier de configuration par défaut de FlowMind. Les valeurs actives sont stockées dans le localStorage du navigateur et modifiables depuis l'interface Paramètres.",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "defaults": {
     "theme": "dark",
     "accentColor": "#00d4ff",

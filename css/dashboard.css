@@ -1,5 +1,32 @@
 /* FlowMind — Dashboard */
 
+/* ── STATUTS PROJETS ─────────────────────────────────────────────── */
+.projects-group-sep {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-muted, #7c8db5); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+  padding: 14px 4px 6px;
+}
+.projects-group-sep::before, .projects-group-sep::after {
+  content: ''; flex: 1; height: 1px;
+  background: rgba(255,255,255,.08);
+}
+
+.project-status-badge {
+  font-size: 10px; font-weight: 600; border-radius: 4px;
+  padding: 1px 6px; text-transform: uppercase; letter-spacing: .06em;
+  vertical-align: middle;
+}
+.badge-paused { background: rgba(245,158,11,.15); color: #f59e0b; }
+.badge-done   { background: rgba(0,217,166,.12);  color: #00d9a6; }
+
+.project-card[data-status="done"] { opacity: .72; }
+.project-card[data-status="done"] .project-name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255,255,255,.3);
+}
+.project-card[data-status="paused"] { opacity: .85; }
+
 /* ── DASHBOARD ──────────────────────────────────────────────────── */
 .dashboard-grid {
   display: grid;

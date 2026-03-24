@@ -337,7 +337,7 @@ const App = (() => {
     const ovList = document.getElementById('projects-overview-list');
     if (ovList) {
       ovList.innerHTML = '';
-      const projects = Projects.getAll();
+      const projects = Projects.getAll().filter(p => p.status !== 'done');
       if (!projects.length) {
         ovList.innerHTML = '<div class="empty-state">Créez votre premier projet.</div>';
       }

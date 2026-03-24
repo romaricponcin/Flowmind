@@ -1,0 +1,745 @@
+{
+  "version": "flowmind-backup-v1",
+  "exportedAt": "2026-03-19T11:58:34.395Z",
+  "data": {
+    "version": 1,
+    "projects": [
+      {
+        "id": "mmw3gmu2csepx",
+        "name": "Rapport Annuel TNE",
+        "color": "#4f8eff",
+        "createdAt": "2026-02-16T09:00:00.000Z"
+      },
+      {
+        "id": "mmw3gmu2vvxi4",
+        "name": "Refonte Site Web",
+        "color": "#00d9a6",
+        "createdAt": "2026-02-26T09:00:00.000Z"
+      },
+      {
+        "id": "mmw3gmu20zltj",
+        "name": "Formation Python",
+        "color": "#f59e0b",
+        "createdAt": "2026-03-08T09:00:00.000Z"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "mmw3gmu2aa885",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Collecter les données financières Q4",
+        "description": "Rassembler les bilans, comptes de résultat et tableaux de flux de trésorerie auprès de la comptabilité.",
+        "priority": "high",
+        "status": "done",
+        "dueDate": "2026-03-13",
+        "completedAt": "2026-03-15T09:00:00.000Z",
+        "timeEstimate": 90,
+        "createdAt": "2026-03-03T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2r6mue",
+            "title": "Contacter la comptabilité",
+            "estimateMin": 15,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2zeer4",
+            "title": "Récupérer les fichiers Excel",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2eyc49",
+            "title": "Vérifier la cohérence des chiffres",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2qislb",
+            "title": "Archiver les pièces justificatives",
+            "estimateMin": 15,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu22l4zh",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Rédiger la synthèse exécutive",
+        "description": "Résumé de 2 pages destiné aux membres du conseil d'administration.",
+        "priority": "high",
+        "status": "deferred",
+        "dueDate": "2026-03-20",
+        "completedAt": null,
+        "timeEstimate": 120,
+        "createdAt": "2026-03-08T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu27i0f9",
+            "title": "Définir le plan et les messages clés",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu24os3b",
+            "title": "Rédiger le premier jet",
+            "estimateMin": 45,
+            "status": "inprogress",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2v87ia",
+            "title": "Intégrer les indicateurs clés (KPI)",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2z1w8l",
+            "title": "Relecture et validation DG",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu26tr7l",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Créer les graphiques et visualisations",
+        "description": "Graphiques d'évolution CA, répartition budgétaire et comparatif N-1.",
+        "priority": "high",
+        "status": "todo",
+        "dueDate": "2026-03-22",
+        "completedAt": null,
+        "timeEstimate": 90,
+        "createdAt": "2026-03-10T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2lht3i",
+            "title": "Évolution du chiffre d'affaires",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2n58s5",
+            "title": "Répartition du budget par pôle",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2qsv9f",
+            "title": "Comparatif N vs N-1",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu29mvme",
+            "title": "Export haute résolution",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2up662",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Préparer la présentation DG",
+        "description": "Diaporama de 15 slides pour la réunion du 25 mars.",
+        "priority": "medium",
+        "status": "deferred",
+        "dueDate": "2026-03-24",
+        "completedAt": null,
+        "timeEstimate": 120,
+        "createdAt": "2026-03-13T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2xcy7j",
+            "title": "Définir le fil conducteur",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2xaw9v",
+            "title": "Créer le template graphique",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2tysli",
+            "title": "Intégrer les graphiques",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2l0dpd",
+            "title": "Répétition et ajustements",
+            "estimateMin": 40,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2h4736",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Envoyer le rapport aux parties prenantes",
+        "description": "Distribution par email + dépôt sur l'intranet.",
+        "priority": "medium",
+        "status": "todo",
+        "dueDate": "2026-03-28",
+        "completedAt": null,
+        "timeEstimate": 30,
+        "createdAt": "2026-03-15T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2gvp9s",
+            "title": "Finaliser le PDF du rapport",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu29bsg6",
+            "title": "Rédiger l'email d'accompagnement",
+            "estimateMin": 10,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu27h3xo",
+            "title": "Envoyer et confirmer les accusés",
+            "estimateMin": 10,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2bya5m",
+        "projectId": "mmw3gmu2csepx",
+        "title": "Réunion de revue avec le comité",
+        "description": "Présentation des résultats et recueil des observations.",
+        "priority": "low",
+        "status": "deferred",
+        "dueDate": "2026-04-01",
+        "completedAt": null,
+        "timeEstimate": 60,
+        "createdAt": "2026-03-16T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2ck8x5",
+            "title": "Envoyer les convocations",
+            "estimateMin": 10,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2o8jrl",
+            "title": "Préparer les supports de salle",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu26su5g",
+            "title": "Rédiger le compte-rendu",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2pvs1u",
+        "projectId": "mmw3gmu2vvxi4",
+        "title": "Audit UX de l'existant",
+        "description": "Analyse des points de friction et du parcours utilisateur actuel.",
+        "priority": "high",
+        "status": "done",
+        "dueDate": "2026-03-08",
+        "completedAt": "2026-03-10T09:00:00.000Z",
+        "timeEstimate": 60,
+        "createdAt": "2026-02-26T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu285jxu",
+            "title": "Heatmaps et enregistrements sessions",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2gwi8h",
+            "title": "Interviews de 5 utilisateurs",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2p5h9h",
+            "title": "Synthèse des insights",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2dyeuf",
+        "projectId": "mmw3gmu2vvxi4",
+        "title": "Wireframes des nouvelles pages",
+        "description": "Maquettes basse fidélité pour Home, Services, Contact.",
+        "priority": "high",
+        "status": "done",
+        "dueDate": "2026-03-12",
+        "completedAt": "2026-03-13T09:00:00.000Z",
+        "timeEstimate": 90,
+        "createdAt": "2026-03-03T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu20ja44",
+            "title": "Page d'accueil",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu22os96",
+            "title": "Page Services",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu29jdo9",
+            "title": "Page Contact",
+            "estimateMin": 20,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2zazrz",
+            "title": "Validation client",
+            "estimateMin": 15,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2pucxx",
+        "projectId": "mmw3gmu2vvxi4",
+        "title": "Intégration HTML/CSS responsive",
+        "description": "Développement front-end mobile-first.",
+        "priority": "high",
+        "status": "inprogress",
+        "dueDate": "2026-03-21",
+        "completedAt": null,
+        "timeEstimate": 180,
+        "createdAt": "2026-03-10T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2qbvhx",
+            "title": "Structure HTML sémantique",
+            "estimateMin": 40,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu23ut7s",
+            "title": "Styles CSS / variables",
+            "estimateMin": 40,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu23itm4",
+            "title": "Responsive mobile",
+            "estimateMin": 40,
+            "status": "inprogress",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2l61qt",
+            "title": "Animations et transitions",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu20g8wf",
+            "title": "Cross-browser testing",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2o3xnu",
+        "projectId": "mmw3gmu2vvxi4",
+        "title": "Optimisation SEO on-page",
+        "description": "Balises meta, structure H1-H6, performance Core Web Vitals.",
+        "priority": "medium",
+        "status": "todo",
+        "dueDate": "2026-03-23",
+        "completedAt": null,
+        "timeEstimate": 60,
+        "createdAt": "2026-03-14T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2dama9",
+            "title": "Audit des balises meta",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2hs8we",
+            "title": "Optimisation des images",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2ed1gb",
+            "title": "Amélioration du score Lighthouse",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2ev25m",
+        "projectId": "mmw3gmu2vvxi4",
+        "title": "Recette et mise en production",
+        "description": "Tests finaux et déploiement sur le serveur de production.",
+        "priority": "high",
+        "status": "todo",
+        "dueDate": "2026-03-26",
+        "completedAt": null,
+        "timeEstimate": 90,
+        "createdAt": "2026-03-16T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu22dgbi",
+            "title": "Tests fonctionnels complets",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2hhq7a",
+            "title": "Sauvegarde de l'ancien site",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2gmz88",
+            "title": "Déploiement et DNS",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu20xbka",
+            "title": "Vérification post-déploiement",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2x7mz8",
+        "projectId": "mmw3gmu20zltj",
+        "title": "Module 1 — Bases du langage",
+        "description": "Variables, types, conditions, boucles.",
+        "priority": "high",
+        "status": "done",
+        "dueDate": "2026-03-11",
+        "completedAt": "2026-03-12T09:00:00.000Z",
+        "timeEstimate": 120,
+        "createdAt": "2026-03-08T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2pxiyg",
+            "title": "Lire la documentation officielle",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2qr93u",
+            "title": "Exercices variables et types",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2nvhlp",
+            "title": "TP conditions et boucles",
+            "estimateMin": 45,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2l0pbm",
+        "projectId": "mmw3gmu20zltj",
+        "title": "Module 2 — Fonctions et modules",
+        "description": "Définir des fonctions, importer des bibliothèques.",
+        "priority": "high",
+        "status": "inprogress",
+        "dueDate": "2026-03-19",
+        "completedAt": null,
+        "timeEstimate": 120,
+        "createdAt": "2026-03-13T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu286dku",
+            "title": "Fonctions : def, return, arguments",
+            "estimateMin": 30,
+            "status": "done",
+            "completedAt": "2026-03-17T09:00:00.000Z"
+          },
+          {
+            "id": "mmw3gmu2xbpml",
+            "title": "Modules : import, pip",
+            "estimateMin": 30,
+            "status": "inprogress",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2rjo7k",
+            "title": "TP mini-calculatrice",
+            "estimateMin": 45,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu217j50",
+            "title": "Quiz de validation",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2dbqit",
+        "projectId": "mmw3gmu20zltj",
+        "title": "Module 3 — Manipulation de données",
+        "description": "Pandas, lecture CSV, nettoyage de données.",
+        "priority": "medium",
+        "status": "todo",
+        "dueDate": "2026-03-26",
+        "completedAt": null,
+        "timeEstimate": 150,
+        "createdAt": "2026-03-16T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2a98do",
+            "title": "Installer Pandas et NumPy",
+            "estimateMin": 15,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2yg7su",
+            "title": "Lire et explorer un DataFrame",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu27h9vw",
+            "title": "Nettoyer les données manquantes",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2m1yht",
+            "title": "Agréger et filtrer",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2cj604",
+            "title": "TP sur dataset réel",
+            "estimateMin": 45,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2tqj7u",
+        "projectId": "mmw3gmu20zltj",
+        "title": "Module 4 — Visualisation avec Matplotlib",
+        "description": "Graphiques, personnalisation, export.",
+        "priority": "low",
+        "status": "deferred",
+        "dueDate": "2026-04-02",
+        "completedAt": null,
+        "timeEstimate": 90,
+        "createdAt": "2026-03-17T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2l7qll",
+            "title": "Courbes et nuages de points",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2y3r7f",
+            "title": "Histogrammes et barres",
+            "estimateMin": 25,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2n1owc",
+            "title": "Personnalisation et thèmes",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2578ms",
+            "title": "Export PNG / SVG",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "mmw3gmu2915ku",
+        "projectId": "mmw3gmu20zltj",
+        "title": "Projet final — Analyse de données TNE",
+        "description": "Appliquer les compétences Python sur des données réelles du projet TNE.",
+        "priority": "medium",
+        "status": "deferred",
+        "dueDate": "2026-04-08",
+        "completedAt": null,
+        "timeEstimate": 180,
+        "createdAt": "2026-03-17T09:00:00.000Z",
+        "subtasks": [
+          {
+            "id": "mmw3gmu2raai7",
+            "title": "Définir le périmètre d'analyse",
+            "estimateMin": 20,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2v3uan",
+            "title": "Collecter les données source",
+            "estimateMin": 30,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2k9kp5",
+            "title": "Nettoyage et préparation",
+            "estimateMin": 45,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2i42bi",
+            "title": "Analyse exploratoire",
+            "estimateMin": 45,
+            "status": "todo",
+            "completedAt": null
+          },
+          {
+            "id": "mmw3gmu2pvbqs",
+            "title": "Rapport et visualisations",
+            "estimateMin": 40,
+            "status": "todo",
+            "completedAt": null
+          }
+        ]
+      }
+    ],
+    "completedHistory": [
+      {
+        "taskId": "mmw3gmu2tqj7u",
+        "title": "Module 4 — Visualisation avec Matplotlib",
+        "projectId": "mmw3gmu20zltj",
+        "completedAt": "2026-03-18T22:11:23.907Z"
+      },
+      {
+        "taskId": "mmw3gmu2tqj7u",
+        "title": "Module 4 — Visualisation avec Matplotlib",
+        "projectId": "mmw3gmu20zltj",
+        "completedAt": "2026-03-18T14:23:31.388Z"
+      },
+      {
+        "taskId": "mmw3gmu2x7mz8",
+        "title": "Module 1 — Bases du langage",
+        "projectId": "mmw3gmu20zltj",
+        "completedAt": "2026-03-12T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmw3gmu2dyeuf",
+        "title": "Wireframes des nouvelles pages",
+        "projectId": "mmw3gmu2vvxi4",
+        "completedAt": "2026-03-13T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmw3gmu2pvs1u",
+        "title": "Audit UX de l'existant",
+        "projectId": "mmw3gmu2vvxi4",
+        "completedAt": "2026-03-10T09:00:00.000Z"
+      },
+      {
+        "taskId": "mmw3gmu2aa885",
+        "title": "Collecter les données financières Q4",
+        "projectId": "mmw3gmu2csepx",
+        "completedAt": "2026-03-15T09:00:00.000Z"
+      }
+    ],
+    "calendarEvents": [],
+    "xp": 140,
+    "level": 2,
+    "streak": 5,
+    "lastActiveDate": "2026-03-18",
+    "feedbacks": [],
+    "config": {
+      "accentColor": "#00d4ff",
+      "successColor": "#10b981",
+      "theme": "dark",
+      "pomodoroMin": 25,
+      "breakShortMin": 5,
+      "sound": "bell",
+      "oneTaskFocus": true,
+      "microstepMaxMin": 15,
+      "notifications": true,
+      "xpPerTask": 10,
+      "xpPerSubtask": 5,
+      "animations": true
+    }
+  }
+}

@@ -247,6 +247,20 @@
         <div><h1 class="view-title">Projets</h1><p class="view-subtitle">Organisez votre travail par projets distincts.</p></div>
         <button class="btn-primary" id="new-project-btn">+ Nouveau projet</button>
       </div>
+      <div class="dash-task-controls" id="projects-controls" style="margin-bottom:12px">
+        <select class="glass-select glass-select-sm" id="projects-sort" title="Trier par">
+          <option value="status">Tri : Statut</option>
+          <option value="name">Tri : Nom</option>
+          <option value="progress">Tri : Progression</option>
+          <option value="created">Tri : Date création</option>
+        </select>
+        <select class="glass-select glass-select-sm" id="projects-filter" title="Filtrer">
+          <option value="all">Tous</option>
+          <option value="active">Actifs</option>
+          <option value="paused">En pause</option>
+          <option value="done">Terminés</option>
+        </select>
+      </div>
       <div id="projects-list" class="projects-list"></div>
     </section>
 
@@ -368,15 +382,16 @@
 
         <div class="glass-card settings-card">
           <div class="settings-section-title">ℹ À propos</div>
-          <div class="setting-row"><label>Version</label><span class="settings-version-badge">v1.2.0</span></div>
-          <div class="setting-row"><label>Date de mise à jour</label><span style="font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace">2026-03-20</span></div>
+          <div class="setting-row"><label>Version</label><span class="settings-version-badge">v1.3.0</span></div>
+          <div class="setting-row"><label>Date de mise à jour</label><span style="font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace">2026-03-23</span></div>
           <div class="setting-row" style="border:none"><label>Notes de version</label></div>
           <ul class="settings-changelog">
+            <li>📋 Statuts projets : Actif / En pause / Terminé</li>
+            <li>✅ Auto-passage en "Terminé" quand toutes les tâches sont terminées</li>
+            <li>↩ Retour automatique en "Actif" si une tâche re-passe en cours</li>
+            <li>📍 Projets terminés repositionnés en bas de liste, pliés automatiquement</li>
             <li>📌 Mémos post-it par projet (création, épinglage, conversion en tâche)</li>
             <li>🏠 Mémos favoris épinglés visibles dès le tableau de bord</li>
-            <li>🎓 Données réelles TNE-DRANE pré-chargées au démarrage</li>
-            <li>🔄 Bouton "Charger le projet TNE-DRANE" dans les paramètres</li>
-            <li>🐛 Correction badge "En cours" sur le tableau de bord</li>
           </ul>
         </div>
 
