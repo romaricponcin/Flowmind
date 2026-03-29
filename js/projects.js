@@ -84,6 +84,18 @@ const Projects = (() => {
         el.addEventListener('change', renderProjectsView);
       }
     });
+
+    // Recherche enrichie via Search module
+    if (typeof Search !== 'undefined') {
+      Search.setupSearchInput({
+        inputId:         'projects-search',
+        modeToggleId:    'projects-search-mode-btn',
+        floatResultsId:  'projects-search-results-float',
+        inlineResultsId: 'projects-search-results-inline',
+        contentId:       'projects-list',
+        getState:        () => _state,
+      });
+    }
   }
 
   function renderProjectsView() {
