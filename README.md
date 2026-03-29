@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.3.0** · Application web 100 % navigateur, sans serveur, sans installation.
+**v1.4.0** · Application web 100 % navigateur, sans serveur, sans installation.
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
@@ -12,8 +12,9 @@
 | Domaine | Ce que fait FlowMind |
 |---|---|
 | 🧠 TDA | Mode focus, décomposition micro-étapes, minuterie Time Timer |
-| 📁 Projets | Multi-projets colorés, statuts, priorités, échéances |
+| 📁 Projets | Multi-projets colorés, statuts (Actif/En pause/Terminé), tri et filtre |
 | 📌 Mémos | Post-it par projet, épinglage tableau de bord, conversion en tâche |
+| 🔍 Recherche | Recherche catégorisée (Tâche / Sous-tâche / Mémo / Projet) avec surlignage |
 | 🔁 Récurrence | Tâches hebdo / mensuel / tous les X jours |
 | 📅 Agenda | Import Zimbra via URL iCal ou fichier `.ics` |
 | 📊 Rapports | Stats filtrées, export Markdown |
@@ -25,6 +26,53 @@
 ## 📖 Guide des fonctionnalités avancées
 
 > Les fonctionnalités simples (créer une tâche, changer de thème, gérer des projets) sont intuitives. Ce guide couvre uniquement ce qui nécessite quelques explications.
+
+---
+
+### 🔍 Recherche catégorisée
+
+La barre de recherche est disponible dans le **Dashboard** et dans la vue **Projets**. Elle cherche simultanément dans toutes les données et regroupe les résultats par catégorie.
+
+#### Lancer une recherche
+
+```
+  Dashboard ou Projets → champ "🔍 Rechercher…"
+  → Taper au moins 1 caractère
+  → Les résultats apparaissent immédiatement, groupés par catégorie
+```
+
+#### Ce qui est recherché
+
+| Catégorie | Champs explorés |
+|---|---|
+| **Projet** | Nom du projet |
+| **Tâche** | Titre, description |
+| **Sous-tâche** | Titre de la sous-tâche (+ tâche parente affichée) |
+| **Mémo** | Texte complet du mémo (extrait centré sur l'occurrence) |
+
+Chaque résultat affiche :
+- Un **badge coloré** indiquant la catégorie
+- La **barre couleur** du projet auquel il appartient
+- Le **terme recherché surligné** dans le titre ou l'extrait
+- Une **ligne contextuelle** : nom du projet · statut · échéance (si définie)
+
+#### Deux modes d'affichage
+
+```
+  Bouton ⊞ / ⊟  à droite du champ de recherche
+```
+
+| Mode | Icône | Comportement |
+|---|---|---|
+| **Flottant** (défaut) | `⊟` | Panneau dropdown au-dessus du contenu — la liste normale reste visible |
+| **Inline** | `⊞` | Les résultats remplacent la liste dans la page |
+
+Le mode choisi est **mémorisé** entre les sessions.
+
+#### Raccourcis
+
+- **Échap** — vide le champ et ferme les résultats
+- **Clic extérieur** (mode flottant) — ferme le panneau sans vider le champ
 
 ---
 
@@ -134,9 +182,9 @@ Les lignes de tâches sont colorées selon leur statut, visible dans le tableau 
 
 ```
   ┃ À faire       fond neutre, liseré gris
-  ┃ En cours      fond bleu,  liseré bleu accent         ←
-  ┃ Reporté       fond bleu soutenu, liseré bleu-gris    ←  barres colorées
-  ┃ Terminé       fond vert, liseré vert mint            ←
+  ┃ En cours      fond amber, liseré amber          ←
+  ┃ Reporté       fond bleu soutenu, liseré bleu-gris  ←  barres colorées
+  ┃ Terminé       fond vert, liseré vert mint        ←
 ```
 
 - Le bouton de statut **actif** est renforcé (bordure, gras, halo lumineux)
@@ -265,23 +313,28 @@ Pages → branche `master` / `/ (root)` → accessible à :
 ```
 flowmind/
 ├── index.html               ← Structure HTML, toutes les vues
-├── README.md                ← Ce fichier
+├── README.md                ← Ce fichier (aussi chargé dans l'aide intégrée)
 ├── css/
-│   ├── main.css             ← Variables, layout, thèmes de base
+│   ├── tokens.css           ← Variables design (couleurs, rayons, ombres)
+│   ├── base.css             ← Reset, glassmorphism, aurora
+│   ├── layout.css           ← Sidebar, topbar, grille principale
 │   ├── components.css       ← Boutons, inputs, modals, toggles
+│   ├── views.css            ← Styles des vues (focus, rapports…)
 │   ├── dashboard.css        ← Tableau de bord et listes de tâches
 │   ├── status-badges.css    ← Couleurs et badges par statut
 │   ├── focus-overlay.css    ← Panneau Mode Focus
 │   ├── memos.css            ← Post-it : styles glassmorphism
+│   ├── search.css           ← Résultats de recherche catégorisés
 │   └── light-theme.css      ← Surcharges thème clair
 └── js/
     ├── storage.js           ← localStorage + sync GitHub Gist
     ├── config.js            ← Configuration & thème
     ├── gamification.js      ← XP, niveaux, streaks
     ├── timer.js             ← Minuterie Time Timer (anneau SVG)
-    ├── projects.js          ← CRUD projets
+    ├── projects.js          ← CRUD projets, tri, filtre
     ├── tasks.js             ← CRUD tâches, récurrence, décomposition
     ├── memos.js             ← CRUD mémos post-it, épinglage, conversion
+    ├── search.js            ← Moteur de recherche catégorisé
     ├── seed-tne-drane.js    ← Données réelles TNE-DRANE (mémos + tâches)
     ├── ical.js              ← Parser iCal, import Zimbra
     ├── reports.js           ← Rapports, export Markdown
@@ -291,6 +344,19 @@ flowmind/
 ---
 
 ## 📝 Changelog
+
+### v1.4.0 — 2026-03-29
+- 🔍 Recherche catégorisée dans le Dashboard et la vue Projets
+- Résultats groupés par type : Tâche · Sous-tâche · Mémo · Projet
+- Surlignage de l'occurrence dans chaque résultat
+- Deux modes au choix : **flottant** (dropdown) ou **inline** (remplace la liste)
+- Bascule ⊞/⊟ mémorisée entre les sessions
+- Fermeture par Échap ou clic extérieur (mode flottant)
+
+### v1.3.0 — 2026-03-24
+- 🏷 Statuts de projets : Actif / En pause / Terminé
+- Tri et filtre des projets (par statut, nom, progression, date)
+- Séparateur visuel entre projets actifs et terminés
 
 ### v1.2.0 — 2026-03-20
 - 📌 Module Mémos post-it par projet (création, couleur, rotation organique)
