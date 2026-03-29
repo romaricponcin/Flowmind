@@ -694,6 +694,18 @@ const App = (() => {
         el.addEventListener('change', _refreshDashList);
       }
     });
+
+    // Recherche enrichie via Search module
+    if (typeof Search !== 'undefined') {
+      Search.setupSearchInput({
+        inputId:         'dash-search',
+        modeToggleId:    'dash-search-mode-btn',
+        floatResultsId:  'dash-search-results',
+        inlineResultsId: 'dash-search-results-inline',
+        contentId:       'next-task-display',
+        getState:        () => _state,
+      });
+    }
   }
 
   function _refreshDashList() {
