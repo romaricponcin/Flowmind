@@ -53,6 +53,14 @@ const Memos = (() => {
     return memo;
   }
 
+  function update(id, changes) {
+    if (!_state) return;
+    const memo = (_state.memos || []).find(m => m.id === id);
+    if (!memo) return;
+    Object.assign(memo, changes);
+    if (_onUpdate) _onUpdate();
+  }
+
   function remove(id) {
     if (!_state) return;
     _state.memos = _state.memos.filter(m => m.id !== id);
@@ -202,6 +210,7 @@ const Memos = (() => {
           title="${memo.pinned ? 'Désépingler' : 'Épingler'}">
           ${memo.pinned ? '📌' : '📍'}
         </button>
+        <button class="memo-btn memo-edit-btn" title="Modifier ce mémo">✎</button>
         <button class="memo-btn memo-convert-btn" title="Convertir en tâche dans le projet">⚡→ Tâche</button>
         <button class="memo-btn memo-delete-btn" title="Supprimer ce mémo">✕</button>
       </div>
@@ -213,6 +222,28 @@ const Memos = (() => {
       togglePin(memo.id);
       onAction();
       _refreshDashPinned();
+    });
+
+    // Modifier le texte du mémo
+    card.querySelector('.memo-edit-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      App.showModal('Modifier le mémo', `
+        <div class="form-group">
+          <label>Texte du mémo</label>
+          <textarea class="glass-input" id="edit-memo-text" rows="4" style="width:100%;resize:vertical">${_esc(memo.text)}</textarea>
+        </div>
+      `, [
+        { label: 'Annuler',      cls: 'btn-secondary', action: () => App.closeModal() },
+        { label: 'Sauvegarder', cls: 'btn-primary',   action: () => {
+          const newText = document.getElementById('edit-memo-text').value.trim();
+          if (!newText) return;
+          update(memo.id, { text: newText });
+          App.closeModal();
+          onAction();
+          _refreshDashPinned();
+        }}
+      ]);
+      setTimeout(() => document.getElementById('edit-memo-text')?.focus(), 100);
     });
 
     // Convertir en tâche (ouvre la modal de création pré-remplie)
@@ -250,7 +281,7 @@ const Memos = (() => {
   return {
     init,
     getAll, getByProject, getPinned, getColorById,
-    create, remove, togglePin, convertToTask,
+    create, update, remove, togglePin, convertToTask,
     renderMemosBoard, renderPinnedMemos,
     MEMO_COLORS
   };
