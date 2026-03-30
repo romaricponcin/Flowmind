@@ -148,10 +148,55 @@ const Search = (() => {
     return div;
   }
 
+  /* ── Navigation vers un résultat ──────────────── */
+  function _navigateToResult(type, id, parentId, projId, closeSearch) {
+    closeSearch();
+
+    if (type === 'task') {
+      if (typeof Tasks !== 'undefined') Tasks.showEditModal(id);
+
+    } else if (type === 'subtask') {
+      if (typeof Tasks !== 'undefined') Tasks.showEditModal(parentId);
+
+    } else if (type === 'project') {
+      const navBtn = document.querySelector('.nav-item[data-view="projects"]');
+      if (navBtn) navBtn.click();
+      // Attendre que la vue se rende
+      setTimeout(() => {
+        const card = document.querySelector(`[data-project-id="${id}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('sr-flash');
+          setTimeout(() => card.classList.remove('sr-flash'), 1200);
+        }
+      }, 150);
+
+    } else if (type === 'memo') {
+      const navBtn = document.querySelector('.nav-item[data-view="projects"]');
+      if (navBtn) navBtn.click();
+      setTimeout(() => {
+        const card = document.querySelector(`[data-project-id="${projId}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('sr-flash');
+          setTimeout(() => card.classList.remove('sr-flash'), 1200);
+          // Ouvrir le panneau mémos s'il est fermé
+          const memoBtn = card.querySelector(`.btn-memo-toggle[data-id="${projId}"]`);
+          const memoBoard = card.querySelector(`#memos-board-top-${projId}`);
+          if (memoBtn && memoBoard && memoBoard.classList.contains('hidden')) {
+            memoBtn.click();
+          }
+        }
+      }, 150);
+    }
+  }
+
   /* ── Carte projet ──────────────────────────────── */
   function _buildProjectItem(project, query) {
     const item = document.createElement('div');
-    item.className = 'sr-item';
+    item.className = 'sr-item sr-clickable';
+    item.dataset.srType = 'project';
+    item.dataset.srId = project.id;
     item.innerHTML = `
       <div class="sr-item-bar" style="background:${_esc(project.color || '#4f8eff')}"></div>
       <div class="sr-item-body">
@@ -167,7 +212,10 @@ const Search = (() => {
   /* ── Carte tâche ───────────────────────────────── */
   function _buildTaskItem(task, query, proj) {
     const item = document.createElement('div');
-    item.className = 'sr-item';
+    item.className = 'sr-item sr-clickable';
+    item.dataset.srType = 'task';
+    item.dataset.srId = task.id;
+    item.dataset.srProject = task.projectId || '';
     const due = task.dueDate ? `<span class="sr-dot">·</span><span class="sr-due">${_fmtDate(task.dueDate)}</span>` : '';
     item.innerHTML = `
       <div class="sr-item-bar" style="background:${_esc(proj?.color || '#4f8eff')}"></div>
@@ -187,7 +235,11 @@ const Search = (() => {
   /* ── Carte sous-tâche ──────────────────────────── */
   function _buildSubtaskItem(subtask, parentTask, query, proj) {
     const item = document.createElement('div');
-    item.className = 'sr-item';
+    item.className = 'sr-item sr-clickable';
+    item.dataset.srType = 'subtask';
+    item.dataset.srId = subtask.id || '';
+    item.dataset.srParent = parentTask.id;
+    item.dataset.srProject = parentTask.projectId || '';
     item.innerHTML = `
       <div class="sr-item-bar" style="background:${_esc(proj?.color || '#60a5fa')}"></div>
       <div class="sr-item-body">
@@ -206,7 +258,10 @@ const Search = (() => {
   /* ── Carte mémo ────────────────────────────────── */
   function _buildMemoItem(memo, query, proj) {
     const item = document.createElement('div');
-    item.className = 'sr-item';
+    item.className = 'sr-item sr-clickable';
+    item.dataset.srType = 'memo';
+    item.dataset.srId = memo.id || '';
+    item.dataset.srProject = memo.projectId || '';
     item.innerHTML = `
       <div class="sr-item-bar" style="background:${_esc(proj?.color || '#fbbf24')}"></div>
       <div class="sr-item-body">
@@ -307,6 +362,25 @@ const Search = (() => {
         _clear(floatEl);
       });
     }
+
+    // Clic sur un résultat → navigation
+    function _bindResultClicks(container) {
+      if (!container || container._clickBound) return;
+      container._clickBound = true;
+      container.addEventListener('click', e => {
+        const item = e.target.closest('.sr-clickable');
+        if (!item) return;
+        const { srType, srId, srParent, srProject } = item.dataset;
+        _navigateToResult(srType, srId, srParent, srProject, () => {
+          input.value = '';
+          _clear(floatEl);
+          _clear(inlineEl);
+          if (contentEl) contentEl.style.display = '';
+        });
+      });
+    }
+    _bindResultClicks(floatEl);
+    _bindResultClicks(inlineEl);
 
     _syncModeBtn();
   }
