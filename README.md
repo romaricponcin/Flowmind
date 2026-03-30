@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.4.0** · Application web 100 % navigateur, sans serveur, sans installation.
+**v1.4.1** · Application web 100 % navigateur, sans serveur, sans installation.
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
@@ -344,6 +344,11 @@ flowmind/
 ---
 
 ## 📝 Changelog
+
+### v1.4.1 — 2026-03-30
+- 🖱 Résultats de recherche cliquables : navigation directe vers la tâche, sous-tâche, projet ou mémo
+- 📝 Bouton ✎ sur les cartes mémo pour modifier le texte d'un mémo existant
+- 🐛 Fix scroll : navigation depuis la recherche ouvre et fait défiler jusqu'au tableau de mémos
 
 ### v1.4.0 — 2026-03-29
 - 🔍 Recherche catégorisée dans le Dashboard et la vue Projets
