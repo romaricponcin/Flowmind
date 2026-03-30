@@ -186,6 +186,11 @@ const Search = (() => {
           if (memoBtn && memoBoard && memoBoard.classList.contains('hidden')) {
             memoBtn.click();
           }
+          // Scroller vers le board lui-même (après rendu)
+          setTimeout(() => {
+            const board = card.querySelector(`#memos-board-top-${projId}`);
+            if (board) board.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
         }
       }, 150);
     }
