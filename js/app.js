@@ -712,7 +712,7 @@ const App = (() => {
     const container = document.getElementById('next-task-display');
     if (!container) return;
     const maxCount = parseInt(document.getElementById('dash-task-count')?.value || '10');
-    const sortBy   = document.getElementById('dash-task-sort')?.value || 'status';
+    const sortBy   = document.getElementById('dash-task-sort')?.value || 'due';
     const filterBy = document.getElementById('dash-task-filter')?.value || 'all';
     _renderDashTaskList(container, maxCount, sortBy, filterBy);
   }
