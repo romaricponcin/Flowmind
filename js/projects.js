@@ -23,6 +23,7 @@ const Projects = (() => {
     let changed = false;
     (_state.projects || []).forEach(p => {
       if (!p.status) { p.status = 'active'; changed = true; }
+      if (!p.tags)   { p.tags   = [];       changed = true; }
     });
     if (changed && _onUpdate) _onUpdate();
   }
@@ -42,6 +43,7 @@ const Projects = (() => {
       name: name.trim(),
       color: color || PROJECT_COLORS[_state.projects.length % PROJECT_COLORS.length],
       status: 'active',
+      tags: [],
       createdAt: new Date().toISOString()
     };
     _state.projects.push(project);
@@ -77,7 +79,7 @@ const Projects = (() => {
   }
 
   function _bindProjectControls() {
-    ['projects-sort', 'projects-filter'].forEach(id => {
+    ['projects-sort', 'projects-filter', 'projects-tag-filter'].forEach(id => {
       const el = document.getElementById(id);
       if (el && !el._bound) {
         el._bound = true;
@@ -98,18 +100,46 @@ const Projects = (() => {
     }
   }
 
+  function _populateTagFilter(currentTag) {
+    const sel = document.getElementById('projects-tag-filter');
+    if (!sel) return;
+    // Collecter tous les tags uniques triés
+    const allTags = [...new Set(
+      (_state?.projects || []).flatMap(p => p.tags || [])
+    )].sort((a, b) => a.localeCompare(b));
+    // Reconstruire les options
+    sel.innerHTML = '<option value="">🏷 Tous les tags</option>';
+    allTags.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      if (t === currentTag) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    // Masquer le select s'il n'y a aucun tag
+    sel.style.display = allTags.length ? '' : 'none';
+  }
+
   function renderProjectsView() {
     const container = document.getElementById('projects-list');
     if (!container || !_state) return;
     _bindProjectControls();
     container.innerHTML = '';
 
-    const sortBy   = document.getElementById('projects-sort')?.value  || 'status';
-    const filterBy = document.getElementById('projects-filter')?.value || 'all';
+    const sortBy   = document.getElementById('projects-sort')?.value       || 'status';
+    const filterBy = document.getElementById('projects-filter')?.value     || 'all';
+    const tagFilter= document.getElementById('projects-tag-filter')?.value || '';
+
+    // Peupler le select de tags avec tous les tags existants
+    _populateTagFilter(tagFilter);
 
     let projects = filterBy === 'all'
       ? [..._state.projects]
       : _state.projects.filter(p => (p.status || 'active') === filterBy);
+
+    if (tagFilter) {
+      projects = projects.filter(p => (p.tags || []).includes(tagFilter));
+    }
 
     if (!projects.length) {
       container.innerHTML = '<div class="empty-state">Aucun projet correspondant.</div>';
@@ -169,6 +199,7 @@ const Projects = (() => {
         <div class="project-info">
           <div class="project-name">${_esc(project.name)}</div>
           <div class="project-stats">${stats.done}/${stats.total} tâches · ${stats.pct}%${scfg.badge ? ' ' + scfg.badge : ''}</div>
+          ${(project.tags || []).length ? `<div class="project-tags">${(project.tags).map(t => `<span class="tag-pill" data-tag="${_esc(t)}">${_esc(t)}</span>`).join('')}</div>` : ''}
         </div>
         <div class="project-card-actions">
           <button class="glass-btn-icon btn-project-status" data-id="${project.id}" data-next="${scfg.next}" title="${scfg.btnTitle}">${scfg.btnIcon}</button>
@@ -281,6 +312,18 @@ const Projects = (() => {
       });
     }
 
+    // Clic sur un tag-pill → filtre la vue sur ce tag
+    card.querySelectorAll('.tag-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sel = document.getElementById('projects-tag-filter');
+        if (sel) {
+          sel.value = pill.dataset.tag;
+          renderProjectsView();
+        }
+      });
+    });
+
     return card;
   }
 
@@ -303,13 +346,20 @@ const Projects = (() => {
         </div>
         <input type="hidden" id="new-proj-color" value="${colors[0]}" />
       </div>
+      <div class="form-group">
+        <label>Tags <span style="font-size:11px;color:var(--t3)">(séparés par des virgules)</span></label>
+        <input type="text" class="glass-input" id="new-proj-tags" placeholder="ex: PMB, TNE, DRANE" />
+      </div>
     `, [
       { label: 'Annuler', cls: 'btn-secondary', action: () => App.closeModal() },
       { label: 'Créer le projet', cls: 'btn-primary', action: () => {
         const name  = document.getElementById('new-proj-name').value.trim();
         const color = document.getElementById('new-proj-color').value;
+        const tags  = document.getElementById('new-proj-tags').value
+          .split(',').map(t => t.trim()).filter(Boolean);
         if (!name) { alert('Le nom est requis.'); return; }
-        create(name, color);
+        const proj = create(name, color);
+        if (proj && tags.length) update(proj.id, { tags });
         App.closeModal();
         App.refresh();
       }}
@@ -329,13 +379,20 @@ const Projects = (() => {
         <label>Couleur</label>
         <input type="color" class="glass-color" id="edit-proj-color" value="${project.color}" />
       </div>
+      <div class="form-group">
+        <label>Tags <span style="font-size:11px;color:var(--t3)">(séparés par des virgules)</span></label>
+        <input type="text" class="glass-input" id="edit-proj-tags" placeholder="ex: PMB, TNE, DRANE"
+          value="${_esc((project.tags || []).join(', '))}" />
+      </div>
     `, [
       { label: 'Annuler', cls: 'btn-secondary', action: () => App.closeModal() },
       { label: 'Sauvegarder', cls: 'btn-primary', action: () => {
         const name  = document.getElementById('edit-proj-name').value.trim();
         const color = document.getElementById('edit-proj-color').value;
+        const tags  = document.getElementById('edit-proj-tags').value
+          .split(',').map(t => t.trim()).filter(Boolean);
         if (!name) return;
-        update(id, { name, color });
+        update(id, { name, color, tags });
         App.closeModal();
         App.refresh();
       }}

@@ -61,9 +61,11 @@ const Search = (() => {
     const result = { projects: [], tasks: [], subtasks: [], memos: [] };
     if (!q || !state) return result;
 
-    // Projets
+    // Projets (nom + tags)
     (state.projects || []).forEach(p => {
-      if (p.name?.toLowerCase().includes(q)) result.projects.push(p);
+      const nameMatch = p.name?.toLowerCase().includes(q);
+      const tagMatch  = (p.tags || []).some(t => t.toLowerCase().includes(q));
+      if (nameMatch || tagMatch) result.projects.push(p);
     });
 
     // Tâches et sous-tâches
@@ -202,6 +204,9 @@ const Search = (() => {
     item.className = 'sr-item sr-clickable';
     item.dataset.srType = 'project';
     item.dataset.srId = project.id;
+    const tagsHtml = (project.tags || []).length
+      ? `<div class="sr-tags">${project.tags.map(t => `<span class="tag-pill tag-pill-sm">${highlight(t, query)}</span>`).join('')}</div>`
+      : '';
     item.innerHTML = `
       <div class="sr-item-bar" style="background:${_esc(project.color || '#4f8eff')}"></div>
       <div class="sr-item-body">
@@ -210,6 +215,7 @@ const Search = (() => {
         <div class="sr-item-meta">
           <span class="sr-status ${_statusCls(project.status)}">${project.status === 'active' ? 'Actif' : project.status === 'paused' ? 'En pause' : 'Terminé'}</span>
         </div>
+        ${tagsHtml}
       </div>`;
     return item;
   }
