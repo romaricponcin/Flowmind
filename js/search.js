@@ -58,7 +58,7 @@ const Search = (() => {
      ════════════════════════════════════════════════ */
   function run(query, state) {
     const q = (query || '').trim().toLowerCase();
-    const result = { projects: [], tasks: [], subtasks: [], memos: [] };
+    const result = { projects: [], tasks: [], subtasks: [], memos: [], expenses: [] };
     if (!q || !state) return result;
 
     // Projets (nom + tags)
@@ -88,6 +88,14 @@ const Search = (() => {
       if (m.text?.toLowerCase().includes(q)) result.memos.push(m);
     });
 
+    // Frais
+    (state.expenses || []).forEach(e => {
+      const titleMatch = e.title?.toLowerCase().includes(q);
+      const descMatch  = e.description?.toLowerCase().includes(q);
+      const locMatch   = e.location?.toLowerCase().includes(q);
+      if (titleMatch || descMatch || locMatch) result.expenses.push(e);
+    });
+
     return result;
   }
 
@@ -100,7 +108,8 @@ const Search = (() => {
     container.className = `search-results sr-visible sr-mode-${mode}`;
 
     const total = results.projects.length + results.tasks.length +
-                  results.subtasks.length + results.memos.length;
+                  results.subtasks.length + results.memos.length +
+                  (results.expenses || []).length;
 
     if (!total) {
       container.innerHTML = '<div class="sr-empty">Aucun résultat pour cette recherche.</div>';
@@ -140,6 +149,14 @@ const Search = (() => {
         container.appendChild(_buildMemoItem(m, query, getProj(m.projectId)));
       });
     }
+
+    // ── Groupe FRAIS ────────────────────────────────
+    if (results.expenses && results.expenses.length) {
+      container.appendChild(_groupSep('Frais', results.expenses.length));
+      results.expenses.forEach(e => {
+        container.appendChild(_buildExpenseItem(e, query));
+      });
+    }
   }
 
   /* ── Séparateur de groupe ──────────────────────── */
@@ -171,6 +188,13 @@ const Search = (() => {
           card.classList.add('sr-flash');
           setTimeout(() => card.classList.remove('sr-flash'), 1200);
         }
+      }, 150);
+
+    } else if (type === 'expense') {
+      const navBtn = document.querySelector('.nav-item[data-view="expenses"]');
+      if (navBtn) navBtn.click();
+      setTimeout(() => {
+        if (typeof Expenses !== 'undefined') Expenses.showEditModal(id);
       }, 150);
 
     } else if (type === 'memo') {
@@ -261,6 +285,30 @@ const Search = (() => {
           <span class="sr-proj">📁 ${_esc(proj?.name || '—')}</span>
           <span class="sr-dot">·</span>
           <span class="${_statusCls(subtask.status)}">${_statusLabel(subtask.status)}</span>
+        </div>
+      </div>`;
+    return item;
+  }
+
+  /* ── Carte frais ───────────────────────────────── */
+  function _buildExpenseItem(expense, query) {
+    const item = document.createElement('div');
+    item.className = 'sr-item sr-clickable';
+    item.dataset.srType = 'expense';
+    item.dataset.srId = expense.id || '';
+    const cat = typeof Expenses !== 'undefined' ? Expenses.getCategoryById(expense.categoryId) : null;
+    const amount = (expense.amount || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+    item.innerHTML = `
+      <div class="sr-item-bar" style="background:${_esc(cat?.color || '#4f8eff')}"></div>
+      <div class="sr-item-body">
+        <span class="sr-badge" style="background:${_esc(cat?.color || '#4f8eff')}20;color:${_esc(cat?.color || '#4f8eff')}">€ Frais</span>
+        <div class="sr-item-title">${highlight(expense.title, query)}</div>
+        <div class="sr-item-meta">
+          <span>${_esc(cat?.shortLabel || '')}</span>
+          <span class="sr-dot">·</span>
+          <span style="font-weight:600">${amount}</span>
+          <span class="sr-dot">·</span>
+          <span>${_fmtDate(expense.date)}</span>
         </div>
       </div>`;
     return item;

@@ -20,6 +20,7 @@ const App = (() => {
     Projects.init(_state, saveState);
     Tasks.init(_state, saveState);
     Memos.init(_state, saveState);
+    Expenses.init(_state, saveState);
     ICal.init(_state, saveState);
     Reports.init(_state);
 
@@ -74,6 +75,7 @@ const App = (() => {
       focus: 'Mode Focus',
       projects: 'Projets',
       calendar: 'Agenda',
+      expenses: 'Frais professionnels',
       reports: 'Rapports d\'activité',
       settings: 'Paramètres'
     };
@@ -85,6 +87,7 @@ const App = (() => {
     if (viewName === 'projects') Projects.renderProjectsView();
     if (viewName === 'focus') _renderFocusLauncher();
     if (viewName === 'calendar') ICal.renderEvents();
+    if (viewName === 'expenses') Expenses.renderExpensesView();
     if (viewName === 'settings') { Config.loadSettingsUI(); _bindSettingsActions(); }
     if (viewName === 'reports') _populateReportSelects();
   }
@@ -135,6 +138,7 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -156,6 +160,7 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -181,6 +186,7 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
         Projects.populateSelects();
         Gamification.renderSidebar();
         closeModal();
@@ -912,6 +918,7 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
