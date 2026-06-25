@@ -205,6 +205,7 @@ const Projects = (() => {
         <div class="project-card-actions">
           <button class="glass-btn-icon btn-project-status" data-id="${project.id}" data-next="${scfg.next}" title="${scfg.btnTitle}">${scfg.btnIcon}</button>
           <button class="glass-btn-icon btn-edit-project" data-id="${project.id}" title="Modifier">✎</button>
+          <button class="glass-btn-icon btn-create-template" data-id="${project.id}" title="Créer un modèle">📋</button>
           <button class="glass-btn-icon btn-delete-project" data-id="${project.id}" title="Supprimer">🗑</button>
           <button class="glass-btn-icon btn-memo-toggle" data-id="${project.id}" title="Mémos du projet">
             <span class="memo-icon-shape"></span><span class="memo-toggle-badge${memoCount ? '' : ' badge-hidden'}" id="memo-badge-${project.id}">${memoCount || ''}</span>
@@ -262,6 +263,15 @@ const Projects = (() => {
       e.stopPropagation();
       showEditModal(project.id);
     });
+
+    // Event: create template
+    const createTemplateBtn = card.querySelector('.btn-create-template');
+    if (createTemplateBtn && typeof Templates !== 'undefined') {
+      createTemplateBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        Templates.showCreateTemplateModal(project.id);
+      });
+    }
 
     // Event: delete
     card.querySelector('.btn-delete-project').addEventListener('click', (e) => {

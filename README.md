@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.4.1** · Application web 100 % navigateur, sans serveur, sans installation.
+**v1.7.0** · Application web 100 % navigateur, sans serveur, sans installation ChangeLog : ajout des modèles de projets
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
@@ -344,6 +344,12 @@ flowmind/
 ---
 
 ## 📝 Changelog
+
+### v1.7.0 — 2026-04-09
+- 📋 **Modèles de projets** : créer et réutiliser des templates de projets
+- ⚡ Créer un projet à partir d'un modèle avec conservation de la structure
+- 📝 Gestion des modèles : créer, utiliser, supprimer les templates
+- 📊 Compteur d'utilisation pour chaque modèle
 
 ### v1.4.1 — 2026-03-30
 - 🖱 Résultats de recherche cliquables : navigation directe vers la tâche, sous-tâche, projet ou mémo
