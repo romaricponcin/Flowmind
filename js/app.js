@@ -75,8 +75,7 @@ const App = (() => {
       dashboard: 'Tableau de bord',
       focus: 'Mode Focus',
       projects: 'Projets',
-      calendar: 'Agenda',
-      expenses: 'Frais professionnels',
+      agenda: 'Agenda & Frais',
       reports: 'Rapports d\'activité',
       settings: 'Paramètres'
     };
@@ -87,8 +86,7 @@ const App = (() => {
     if (viewName === 'dashboard') _renderDashboard();
     if (viewName === 'projects') Projects.renderProjectsView();
     if (viewName === 'focus') _renderFocusLauncher();
-    if (viewName === 'calendar') { ICal.renderEvents(); ICal.bindCloudSync(); }
-    if (viewName === 'expenses') Expenses.renderExpensesView();
+    if (viewName === 'agenda') Expenses.renderExpensesView();
     if (viewName === 'settings') { Config.loadSettingsUI(); _bindSettingsActions(); }
     if (viewName === 'reports') _populateReportSelects();
   }

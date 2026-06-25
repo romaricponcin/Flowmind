@@ -191,7 +191,7 @@ const Search = (() => {
       }, 150);
 
     } else if (type === 'expense') {
-      const navBtn = document.querySelector('.nav-item[data-view="expenses"]');
+      const navBtn = document.querySelector('.nav-item[data-view="agenda"]');
       if (navBtn) navBtn.click();
       setTimeout(() => {
         if (typeof Expenses !== 'undefined') Expenses.showEditModal(id);

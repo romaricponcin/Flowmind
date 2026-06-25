@@ -169,12 +169,12 @@ const Expenses = (() => {
   }
 
   function _bindZimbraImport() {
-    const importBtn = document.getElementById('expenses-ical-import-btn');
-    const fileInput = document.getElementById('expenses-ical-file');
+    const importBtn = document.getElementById('ical-import-btn');
+    const fileInput = document.getElementById('ical-file-input');
 
     if (importBtn) {
       importBtn.addEventListener('click', async () => {
-        const url = document.getElementById('expenses-ical-url')?.value.trim();
+        const url = document.getElementById('ical-url-input')?.value.trim();
         if (!url) { alert('Entrez une URL .ics valide.'); return; }
         importBtn.textContent = '⏳ Import…';
         importBtn.disabled = true;
@@ -217,9 +217,9 @@ const Expenses = (() => {
   // ── CLOUD SYNC (Gist ICS) ──────────────────────────────────────────
 
   function _bindCloudSync() {
-    const gistInput = document.getElementById('expenses-ics-gist-id');
-    const syncBtn = document.getElementById('expenses-cloud-sync-btn');
-    const statusEl = document.getElementById('expenses-cloud-status');
+    const gistInput = document.getElementById('agenda-ics-gist-id');
+    const syncBtn = document.getElementById('agenda-cloud-sync-btn');
+    const statusEl = document.getElementById('agenda-cloud-status');
 
     if (gistInput) {
       gistInput.value = Storage.getIcsGistId();

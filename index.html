@@ -137,8 +137,7 @@
       <button class="nav-item active" data-view="dashboard"><span class="nav-icon">◈</span><span class="nav-label">Tableau de bord</span></button>
       <button class="nav-item" data-view="focus"><span class="nav-icon">◎</span><span class="nav-label">Mode Focus</span></button>
       <button class="nav-item" data-view="projects"><span class="nav-icon">◧</span><span class="nav-label">Projets</span></button>
-      <button class="nav-item" data-view="calendar"><span class="nav-icon">◫</span><span class="nav-label">Agenda</span></button>
-      <button class="nav-item" data-view="expenses"><span class="nav-icon">€</span><span class="nav-label">Frais pro</span></button>
+      <button class="nav-item" data-view="agenda"><span class="nav-icon">◫</span><span class="nav-label">Agenda & Frais</span></button>
       <button class="nav-item" data-view="reports"><span class="nav-icon">◱</span><span class="nav-label">Rapports</span></button>
       <button class="nav-item" data-view="settings"><span class="nav-icon">◬</span><span class="nav-label">Paramètres</span></button>
     </nav>
@@ -286,49 +285,11 @@
       <div id="projects-list" class="projects-list"></div>
     </section>
 
-    <section class="view" id="view-calendar">
-      <div class="view-header">
-        <div><h1 class="view-title">Agenda</h1><p class="view-subtitle">Synchronisez votre calendrier Zimbra.</p></div>
-      </div>
-      <div class="sync-grid">
-        <div class="glass-card sync-card">
-          <div class="sync-card-icon-wrap">🔗</div>
-          <h3 class="sync-card-title">Sync via URL iCal</h3>
-          <p class="sync-card-desc">Entrez l'URL iCal de votre agenda Zimbra.</p>
-          <div class="input-with-btn">
-            <input type="url" id="ical-url-input" class="glass-input" placeholder="https://mail.institution.fr/…?fmt=ics"/>
-            <button class="btn-primary btn-sm" id="ical-import-btn">Importer</button>
-          </div>
-          <div class="sync-tip">💡 Zimbra : Préférences → Calendriers → Partager → Lien iCal</div>
-        </div>
-        <div class="glass-card sync-card">
-          <div class="sync-card-icon-wrap">📁</div>
-          <h3 class="sync-card-title">Importer un fichier .ics</h3>
-          <p class="sync-card-desc">Téléchargez depuis Zimbra et importez ici.</p>
-          <input type="file" id="ical-file-input" accept=".ics" class="glass-file-input"/>
-        </div>
-        <div class="glass-card sync-card">
-          <div class="sync-card-icon-wrap">☁</div>
-          <h3 class="sync-card-title">Sync cloud (Gist)</h3>
-          <p class="sync-card-desc">Synchronisez depuis le Gist GitHub (via workflow Actions).</p>
-          <div class="input-with-btn">
-            <input type="text" id="agenda-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier"/>
-            <button class="btn-primary btn-sm" id="agenda-cloud-sync-btn">Sync cloud</button>
-          </div>
-          <div id="agenda-cloud-status" style="font-size:11px;margin-top:6px;min-height:14px"></div>
-          <div class="sync-tip">Le workflow GitHub Actions met à jour le Gist toutes les 30 min.</div>
-        </div>
-      </div>
-      <div id="calendar-events-list" class="calendar-events-list">
-        <div class="empty-state"><div class="empty-icon">📅</div>Aucun agenda synchronisé.</div>
-      </div>
-    </section>
-
-    <section class="view" id="view-expenses">
+    <section class="view" id="view-agenda">
       <div class="view-header">
         <div>
-          <h1 class="view-title">Frais professionnels</h1>
-          <p class="view-subtitle">Suivi des déplacements et repas professionnels</p>
+          <h1 class="view-title">Agenda & Frais</h1>
+          <p class="view-subtitle">Calendrier, événements Zimbra et frais professionnels</p>
         </div>
         <div class="topbar-actions">
           <button class="btn-primary" id="new-expense-btn">+ Nouveau frais</button>
@@ -355,18 +316,18 @@
           <summary>Importer depuis Zimbra</summary>
           <div class="expenses-zimbra-content">
             <div class="input-with-btn">
-              <input type="url" id="expenses-ical-url" class="glass-input" placeholder="URL iCal Zimbra…"/>
-              <button class="btn-primary btn-sm" id="expenses-ical-import-btn">Importer</button>
+              <input type="url" id="ical-url-input" class="glass-input" placeholder="https://mail.institution.fr/…?fmt=ics"/>
+              <button class="btn-primary btn-sm" id="ical-import-btn">Importer</button>
             </div>
-            <input type="file" id="expenses-ical-file" accept=".ics" class="glass-file-input"/>
+            <input type="file" id="ical-file-input" accept=".ics" class="glass-file-input"/>
             <div class="expenses-zimbra-cloud" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--glass-border)">
               <label style="font-size:12px;color:var(--text-2);margin-bottom:4px;display:block">Sync cloud (Gist)</label>
               <div class="input-with-btn">
-                <input type="text" id="expenses-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier (ex: abc123def456)"/>
-                <button class="btn-primary btn-sm" id="expenses-cloud-sync-btn">Sync cloud</button>
+                <input type="text" id="agenda-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier"/>
+                <button class="btn-primary btn-sm" id="agenda-cloud-sync-btn">Sync cloud</button>
               </div>
-              <div id="expenses-cloud-status" style="font-size:11px;margin-top:4px;min-height:14px"></div>
-              <div class="sync-tip">Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min). Cliquez Sync pour lire les dernières données.</div>
+              <div id="agenda-cloud-status" style="font-size:11px;margin-top:4px;min-height:14px"></div>
+              <div class="sync-tip">Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min).</div>
             </div>
           </div>
         </details>
