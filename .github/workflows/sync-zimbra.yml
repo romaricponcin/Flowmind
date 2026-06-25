@@ -43,14 +43,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
           GIST_ID: ${{ secrets.ICS_GIST_ID }}
         run: |
-          ICS_CONTENT=$(python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))" < calendar.ics)
+          python3 -c "
+          import sys, json
+          ics = open('calendar.ics').read()
+          payload = {'files': {'calendar.ics': {'content': ics}}}
+          json.dump(payload, open('payload.json', 'w'))
+          "
 
           curl -sSf \
             -X PATCH \
             -H "Authorization: token $GH_TOKEN" \
             -H "Content-Type: application/json" \
             "https://api.github.com/gists/$GIST_ID" \
-            -d "{\"files\":{\"calendar.ics\":{\"content\":$ICS_CONTENT}}}" \
+            -d @payload.json \
             -o /dev/null
 
           echo "Gist $GIST_ID updated successfully"
