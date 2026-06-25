@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/light-theme.css"/>
   <link rel="stylesheet" href="css/memos.css"/>
   <link rel="stylesheet" href="css/search.css"/>
+  <link rel="stylesheet" href="css/expenses.css"/>
 </head>
 <body>
 
@@ -137,6 +138,7 @@
       <button class="nav-item" data-view="focus"><span class="nav-icon">◎</span><span class="nav-label">Mode Focus</span></button>
       <button class="nav-item" data-view="projects"><span class="nav-icon">◧</span><span class="nav-label">Projets</span></button>
       <button class="nav-item" data-view="calendar"><span class="nav-icon">◫</span><span class="nav-label">Agenda</span></button>
+      <button class="nav-item" data-view="expenses"><span class="nav-icon">€</span><span class="nav-label">Frais pro</span></button>
       <button class="nav-item" data-view="reports"><span class="nav-icon">◱</span><span class="nav-label">Rapports</span></button>
       <button class="nav-item" data-view="settings"><span class="nav-icon">◬</span><span class="nav-label">Paramètres</span></button>
     </nav>
@@ -311,6 +313,63 @@
       </div>
     </section>
 
+    <section class="view" id="view-expenses">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Frais professionnels</h1>
+          <p class="view-subtitle">Suivi des déplacements et repas professionnels</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-primary" id="new-expense-btn">+ Nouveau frais</button>
+          <button class="btn-secondary btn-sm" id="export-expenses-btn">↓ Exporter CSV</button>
+        </div>
+      </div>
+      <div class="expenses-controls glass-surface-light">
+        <div class="expenses-view-toggle">
+          <button class="btn-secondary btn-sm expenses-mode-btn active" data-mode="calendar">Calendrier</button>
+          <button class="btn-secondary btn-sm expenses-mode-btn" data-mode="list">Liste</button>
+        </div>
+        <select id="expenses-category-filter" class="glass-select glass-select-sm">
+          <option value="all">Toutes catégories</option>
+        </select>
+        <select id="expenses-status-filter" class="glass-select glass-select-sm">
+          <option value="all">Tous statuts</option>
+          <option value="draft">Brouillon</option>
+          <option value="submitted">Transmis</option>
+          <option value="reimbursed">Remboursé</option>
+        </select>
+      </div>
+      <div id="expenses-zimbra-panel" class="glass-card expenses-zimbra-panel">
+        <details>
+          <summary>Importer depuis Zimbra</summary>
+          <div class="expenses-zimbra-content">
+            <div class="input-with-btn">
+              <input type="url" id="expenses-ical-url" class="glass-input" placeholder="URL iCal Zimbra…"/>
+              <button class="btn-primary btn-sm" id="expenses-ical-import-btn">Importer</button>
+            </div>
+            <input type="file" id="expenses-ical-file" accept=".ics" class="glass-file-input"/>
+            <div class="expenses-zimbra-cloud" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--glass-border)">
+              <label style="font-size:12px;color:var(--text-2);margin-bottom:4px;display:block">Sync cloud (Gist)</label>
+              <div class="input-with-btn">
+                <input type="text" id="expenses-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier (ex: abc123def456)"/>
+                <button class="btn-primary btn-sm" id="expenses-cloud-sync-btn">Sync cloud</button>
+              </div>
+              <div id="expenses-cloud-status" style="font-size:11px;margin-top:4px;min-height:14px"></div>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div id="expenses-calendar-area"></div>
+      <div id="expenses-day-detail" class="expenses-day-detail"></div>
+      <div id="expenses-list-area"></div>
+      <div id="expenses-summary-area" class="glass-card"></div>
+      <details id="expenses-cat-manager" class="glass-card">
+        <summary>Gérer les catégories</summary>
+        <div id="expenses-cat-list"></div>
+        <button class="btn-secondary btn-sm" id="add-expense-cat-btn">+ Catégorie</button>
+      </details>
+    </section>
+
     <section class="view" id="view-reports">
       <div class="view-header">
         <div><h1 class="view-title">Rapports</h1><p class="view-subtitle">Historique de votre activité par projet.</p></div>
@@ -440,6 +499,7 @@
 <script src="js/ical.js"></script>
 <script src="js/reports.js"></script>
 <script src="js/memos.js"></script>
+<script src="js/expenses.js"></script>
 <script src="js/search.js"></script>
 <script src="js/app.js"></script>
 </body>

@@ -32,10 +32,13 @@ const ICal = (() => {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (ev) => {
-          const events = parseICS(ev.target.result);
-          _mergeEvents(events);
+          const result = parseICS(ev.target.result);
+          _mergeEvents(result.events);
+          const taskCount = importTasks(result.todos);
           renderEvents();
-          alert(`✅ ${events.length} événement(s) importé(s).`);
+          const parts = [`${result.events.length} événement(s)`];
+          if (taskCount) parts.push(`${taskCount} tâche(s)`);
+          alert(`✅ ${parts.join(' et ')} importé(s).`);
         };
         reader.readAsText(file);
       });
@@ -52,10 +55,13 @@ const ICal = (() => {
       const resp = await fetch(proxyUrl);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const text = await resp.text();
-      const events = parseICS(text);
-      _mergeEvents(events);
+      const result = parseICS(text);
+      _mergeEvents(result.events);
+      const taskCount = importTasks(result.todos);
       renderEvents();
-      alert(`✅ ${events.length} événement(s) importé(s) depuis Zimbra.`);
+      const parts = [`${result.events.length} événement(s)`];
+      if (taskCount) parts.push(`${taskCount} tâche(s)`);
+      alert(`✅ ${parts.join(' et ')} importé(s) depuis Zimbra.`);
     } catch (e) {
       alert(`⚠ Impossible d'importer directement (restrictions CORS).\n\nSolution : Téléchargez votre calendrier depuis Zimbra (Fichier → Exporter) et importez le fichier .ics.\n\nErreur : ${e.message}`);
     } finally {
@@ -65,13 +71,14 @@ const ICal = (() => {
 
   function parseICS(icsText) {
     const events = [];
+    const todos = [];
     const lines  = icsText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
 
     let current = null;
+    let currentType = null;
 
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
-      // Gestion des lignes dépliées (continuation avec espace)
       while (i + 1 < lines.length && (lines[i+1].startsWith(' ') || lines[i+1].startsWith('\t'))) {
         i++;
         line += lines[i].substring(1);
@@ -79,9 +86,17 @@ const ICal = (() => {
 
       if (line === 'BEGIN:VEVENT') {
         current = {};
-      } else if (line === 'END:VEVENT' && current) {
-        if (current.title) events.push(current);
+        currentType = 'event';
+      } else if (line === 'BEGIN:VTODO') {
+        current = {};
+        currentType = 'todo';
+      } else if ((line === 'END:VEVENT' || line === 'END:VTODO') && current) {
+        if (current.title) {
+          if (currentType === 'event') events.push(current);
+          else todos.push(current);
+        }
         current = null;
+        currentType = null;
       } else if (current) {
         const colonIdx = line.indexOf(':');
         if (colonIdx < 0) continue;
@@ -101,17 +116,29 @@ const ICal = (() => {
           case 'DTEND':
             current.end = _parseICSDate(val);
             break;
+          case 'DUE':
+            current.due = _parseICSDate(val);
+            break;
           case 'LOCATION':
             current.location = _unescapeICS(val);
             break;
           case 'UID':
             current.uid = val;
             break;
+          case 'STATUS':
+            current.icsStatus = val.trim().toUpperCase();
+            break;
+          case 'PRIORITY':
+            current.icsPriority = parseInt(val, 10) || 0;
+            break;
+          case 'PERCENT-COMPLETE':
+            current.percentComplete = parseInt(val, 10) || 0;
+            break;
         }
       }
     }
 
-    return events;
+    return { events, todos };
   }
 
   function _parseICSDate(val) {
@@ -210,9 +237,50 @@ const ICal = (() => {
     return card;
   }
 
+  function _mapVtodoStatus(icsStatus) {
+    switch (icsStatus) {
+      case 'IN-PROCESS': return 'inprogress';
+      case 'COMPLETED': return 'done';
+      case 'CANCELLED': return 'deferred';
+      default: return 'todo';
+    }
+  }
+
+  function _mapVtodoPriority(icsPrio) {
+    if (icsPrio >= 1 && icsPrio <= 4) return 'high';
+    if (icsPrio === 5) return 'medium';
+    if (icsPrio >= 6 && icsPrio <= 9) return 'low';
+    return 'none';
+  }
+
+  function importTasks(vtodos) {
+    if (!vtodos || !vtodos.length || typeof Tasks === 'undefined') return 0;
+    const projects = typeof Projects !== 'undefined' ? Projects.getAll() : [];
+    const defaultProjectId = projects[0]?.id || null;
+    let count = 0;
+    vtodos.forEach(todo => {
+      const status = _mapVtodoStatus(todo.icsStatus);
+      const task = Tasks.create(defaultProjectId, todo.title, {
+        description: todo.description || '',
+        status: status,
+        priority: _mapVtodoPriority(todo.icsPriority || 0),
+        dueDate: todo.due || todo.start || null
+      });
+      if (task && status === 'done') {
+        Tasks.setStatus(task.id, 'done');
+      }
+      count++;
+    });
+    return count;
+  }
+
+  function getEvents() {
+    return (_state?.calendarEvents || []).filter(e => e.start);
+  }
+
   function _esc(str) {
     return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  return { init, parseICS, importFromUrl, renderEvents };
+  return { init, parseICS, importFromUrl, importTasks, renderEvents, getEvents };
 })();

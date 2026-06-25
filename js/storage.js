@@ -19,6 +19,12 @@ const Storage = (() => {
     streak: 0,
     lastActiveDate: null,
     feedbacks: [],
+    expenses: [],
+    expenseCategories: [
+      { id: 'sofia_convoc', label: 'Frais transmis via SOFIA avec convocation', shortLabel: 'SOFIA + convocation', icon: '\u{1F4CB}', color: '#4f8eff' },
+      { id: 'deplacement_om', label: 'Frais de déplacements sans convocation avec OM', shortLabel: 'Déplacement + OM', icon: '\u{1F697}', color: '#f59e0b' },
+      { id: 'repas_converti', label: 'Repas sans convocations transformés en déplacements', shortLabel: 'Repas → déplacement', icon: '\u{1F37D}', color: '#00d9a6' }
+    ],
     config: {
       accentColor: '#00d4ff',
       successColor: '#10b981',
@@ -135,6 +141,28 @@ const Storage = (() => {
     return JSON.parse(raw);
   }
 
+  // ── ICS GIST (Zimbra calendar sync) ──────────────────────────────────
+  const ICS_GIST_KEY = 'flowmind_ics_gist_id';
+
+  function getIcsGistId() { return localStorage.getItem(ICS_GIST_KEY) || ''; }
+  function setIcsGistId(id) { localStorage.setItem(ICS_GIST_KEY, id); }
+
+  async function loadIcsFromCloud() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant. Configurez-le dans Paramètres → Cloud.');
+    const gistId = getIcsGistId();
+    if (!gistId) throw new Error('Aucun Gist calendrier configuré.');
+    const resp = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    const raw = json.files['calendar.ics']?.content;
+    if (!raw) throw new Error('Fichier calendar.ics introuvable dans le Gist.');
+    return { icsText: raw, updatedAt: json.updated_at };
+  }
+
   return { load, save, reset, generateId, DEFAULT_STATE,
-    getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud };
+    getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
+    getIcsGistId, setIcsGistId, loadIcsFromCloud };
 })();

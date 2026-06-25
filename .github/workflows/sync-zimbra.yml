@@ -1,0 +1,56 @@
+# FlowMind — Synchronisation Zimbra vers GitHub Gist (cloud)
+# Ce workflow telecharge le calendrier iCal depuis Zimbra et le pousse dans un Gist prive.
+#
+# Secrets a configurer dans GitHub (Settings > Secrets and variables > Actions) :
+#   ZIMBRA_ICS_URL  : URL iCal Zimbra
+#                     ex: https://mail.ac-academie.fr/service/home/prenom.nom@ac-academie.fr/Calendar?fmt=ics
+#   ZIMBRA_AUTH     : Identifiants Zimbra au format  user@ac-academie.fr:motdepasse
+#                     (optionnel si l'URL est publique)
+#   GH_GIST_TOKEN   : Token GitHub avec scope "gist"
+#   ICS_GIST_ID     : ID du Gist cible (creer un Gist secret d'abord sur gist.github.com)
+
+name: Sync Zimbra Calendar
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # Toutes les 2 heures
+  workflow_dispatch:        # Declenchement manuel
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download ICS from Zimbra
+        env:
+          ZIMBRA_URL: ${{ secrets.ZIMBRA_ICS_URL }}
+          ZIMBRA_AUTH: ${{ secrets.ZIMBRA_AUTH }}
+        run: |
+          if [ -n "$ZIMBRA_AUTH" ]; then
+            curl -sSfL -u "$ZIMBRA_AUTH" "$ZIMBRA_URL" -o calendar.ics
+          else
+            curl -sSfL "$ZIMBRA_URL" -o calendar.ics
+          fi
+          SIZE=$(wc -c < calendar.ics)
+          echo "Downloaded $SIZE bytes"
+          if [ "$SIZE" -lt 50 ]; then
+            echo "ERROR: file too small, likely auth failure"
+            cat calendar.ics
+            exit 1
+          fi
+
+      - name: Push to GitHub Gist
+        env:
+          GH_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
+          GIST_ID: ${{ secrets.ICS_GIST_ID }}
+        run: |
+          ICS_CONTENT=$(python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))" < calendar.ics)
+
+          curl -sSf \
+            -X PATCH \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.github.com/gists/$GIST_ID" \
+            -d "{\"files\":{\"calendar.ics\":{\"content\":$ICS_CONTENT}}}" \
+            -o /dev/null
+
+          echo "Gist $GIST_ID updated successfully"
