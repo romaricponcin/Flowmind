@@ -16,9 +16,8 @@
 | 📌 Mémos | Post-it par projet, épinglage tableau de bord, conversion en tâche |
 | 🔍 Recherche | Recherche catégorisée (Tâche / Sous-tâche / Mémo / Projet) avec surlignage |
 | 🔁 Récurrence | Tâches hebdo / mensuel / tous les X jours |
-| 📅 Agenda | Import Zimbra via URL iCal, fichier `.ics` ou sync cloud (Gist) |
-| 💶 Frais pro | Calendrier mensuel, catégories personnalisables, export CSV, conversion tâche ↔ frais |
-| 🔄 Sync Zimbra | Synchronisation automatique via GitHub Actions + Gist (toutes les 30 min) |
+| 📅 Agenda & Frais | Calendrier mensuel unifié : événements Zimbra + frais professionnels, catégories, export CSV |
+| 🔄 Sync Zimbra | Import URL/fichier/.ics + synchronisation automatique via GitHub Actions + Gist (30 min) |
 | 📊 Rapports | Stats filtrées, export Markdown |
 | 💾 Sauvegarde | Export JSON, GitHub Gist, sync fichier local (Nextcloud) |
 | 🎮 Gamification | XP, niveaux, streaks, animations de récompense |
@@ -306,15 +305,15 @@ La sync cloud contourne les restrictions CORS en utilisant un Gist GitHub comme 
    - `GH_GIST_TOKEN` : token GitHub (scope `gist`)
    - `ICS_GIST_ID` : ID du Gist créé
 3. Le workflow GitHub Actions synchronise automatiquement toutes les 30 min
-4. Dans FlowMind → Agenda ou Frais pro → coller le Gist ID → cliquer "Sync cloud"
+4. Dans FlowMind → Agenda & Frais → Importer depuis Zimbra → coller le Gist ID → cliquer "Sync cloud"
 
 Les tâches Zimbra (VTODO) sont aussi importées automatiquement.
 
 ---
 
-### 💶 Frais professionnels
+### 💶 Agenda & Frais
 
-L'onglet **Frais pro** permet de suivre les déplacements et repas professionnels.
+L'onglet **Agenda & Frais** unifie le calendrier Zimbra et le suivi des frais professionnels.
 
 - **Calendrier mensuel** : grille avec pastilles colorées par catégorie, clic sur un jour pour voir le détail
 - **Vue liste** : chronologique, groupée par date
@@ -369,7 +368,7 @@ flowmind/
     ├── search.js            ← Moteur de recherche catégorisé
     ├── seed-tne-drane.js    ← Données réelles TNE-DRANE (mémos + tâches)
     ├── ical.js              ← Parser iCal, import Zimbra
-    ├── expenses.js          ← Frais professionnels, calendrier, export CSV
+    ├── expenses.js          ← Agenda & Frais : calendrier, frais, export CSV
     ├── reports.js           ← Rapports, export Markdown
     └── app.js               ← Contrôleur principal, routage, Focus
 ```
@@ -379,7 +378,7 @@ flowmind/
 ## 📝 Changelog
 
 ### v1.8.0 — 2026-06-25
-- 💶 **Frais professionnels** : nouvel onglet avec calendrier mensuel, vue liste, récapitulatif
+- 📅 **Agenda & Frais** : onglet unifié calendrier + frais (vue grille, liste, récapitulatif)
 - 📋 3 catégories prédéfinies (SOFIA, OM, Repas) + catégories personnalisables
 - 🔄 Conversion bidirectionnelle tâches ↔ frais et événements Zimbra → frais
 - 📊 Export CSV mensuel (séparateur `;`, UTF-8 BOM, compatible Excel)

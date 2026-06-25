@@ -10,39 +10,6 @@ const ICal = (() => {
   function init(state, onUpdate) {
     _state = state;
     _onUpdate = onUpdate;
-    _bindUI();
-    renderEvents();
-  }
-
-  function _bindUI() {
-    const importBtn  = document.getElementById('ical-import-btn');
-    const fileInput  = document.getElementById('ical-file-input');
-
-    if (importBtn) {
-      importBtn.addEventListener('click', () => {
-        const url = document.getElementById('ical-url-input')?.value.trim();
-        if (!url) { alert('Entrez une URL .ics valide.'); return; }
-        importFromUrl(url);
-      });
-    }
-
-    if (fileInput) {
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const result = parseICS(ev.target.result);
-          _mergeEvents(result.events);
-          const taskCount = importTasks(result.todos);
-          renderEvents();
-          const parts = [`${result.events.length} événement(s)`];
-          if (taskCount) parts.push(`${taskCount} tâche(s)`);
-          alert(`✅ ${parts.join(' et ')} importé(s).`);
-        };
-        reader.readAsText(file);
-      });
-    }
   }
 
   async function importFromUrl(url) {
@@ -172,71 +139,6 @@ const ICal = (() => {
     if (_onUpdate) _onUpdate();
   }
 
-  function renderEvents() {
-    const container = document.getElementById('calendar-events-list');
-    if (!container || !_state) return;
-    container.innerHTML = '';
-
-    const events = (_state.calendarEvents || []).filter(e => e.start);
-    if (!events.length) {
-      container.innerHTML = '<div class="empty-state">Aucun agenda synchronisé. Utilisez les options ci-dessus.</div>';
-      return;
-    }
-
-    // Trier par date, afficher les prochains 30 jours en priorité
-    const now = new Date();
-    const sorted = [...events].sort((a, b) => new Date(a.start) - new Date(b.start));
-    const upcoming = sorted.filter(e => new Date(e.start) >= now).slice(0, 50);
-    const past = sorted.filter(e => new Date(e.start) < now).slice(-10).reverse();
-
-    if (upcoming.length) {
-      const h = document.createElement('h3');
-      h.style.cssText = 'font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary);margin-bottom:8px';
-      h.textContent = 'Prochains événements';
-      container.appendChild(h);
-      upcoming.forEach(e => container.appendChild(_buildEventCard(e)));
-    }
-
-    if (past.length) {
-      const h = document.createElement('h3');
-      h.style.cssText = 'font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin:16px 0 8px';
-      h.textContent = 'Événements passés récents';
-      container.appendChild(h);
-      past.forEach(e => {
-        const card = _buildEventCard(e);
-        card.style.opacity = '0.5';
-        container.appendChild(card);
-      });
-    }
-  }
-
-  function _buildEventCard(event) {
-    const card = document.createElement('div');
-    card.className = 'calendar-event fade-in';
-
-    const startDate = event.start ? new Date(event.start) : null;
-    const endDate   = event.end ? new Date(event.end) : null;
-
-    const dateStr = startDate
-      ? startDate.toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short' })
-      : '—';
-    const timeStr = startDate?.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) || '';
-    const endStr  = endDate?.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }) || '';
-
-    card.innerHTML = `
-      <div class="cal-event-date">
-        <div>${dateStr}</div>
-        <div style="margin-top:2px">${timeStr}${endStr ? '→'+endStr : ''}</div>
-      </div>
-      <div>
-        <div class="cal-event-title">${_esc(event.title)}</div>
-        ${event.location ? `<div class="cal-event-desc">📍 ${_esc(event.location)}</div>` : ''}
-        ${event.description ? `<div class="cal-event-desc">${_esc(event.description.substring(0, 100))}</div>` : ''}
-      </div>
-    `;
-    return card;
-  }
-
   function _mapVtodoStatus(icsStatus) {
     switch (icsStatus) {
       case 'IN-PROCESS': return 'inprogress';
@@ -278,64 +180,9 @@ const ICal = (() => {
     return (_state?.calendarEvents || []).filter(e => e.start);
   }
 
-  function bindCloudSync() {
-    const gistInput = document.getElementById('agenda-ics-gist-id');
-    const syncBtn = document.getElementById('agenda-cloud-sync-btn');
-    const statusEl = document.getElementById('agenda-cloud-status');
-
-    if (gistInput) gistInput.value = Storage.getIcsGistId();
-
-    if (syncBtn) {
-      syncBtn.onclick = async () => {
-        const gistId = gistInput?.value.trim();
-        if (!gistId) { alert('Saisissez l\'ID du Gist calendrier.'); return; }
-        Storage.setIcsGistId(gistId);
-
-        syncBtn.textContent = '⏳ Sync…';
-        syncBtn.disabled = true;
-        if (statusEl) { statusEl.textContent = 'Synchronisation en cours…'; statusEl.style.color = 'var(--text-2)'; }
-
-        try {
-          const { icsText, updatedAt } = await Storage.loadIcsFromCloud();
-          const result = parseICS(icsText);
-
-          const existingUids = new Set((_state.calendarEvents || []).map(e => e.uid));
-          const toAdd = (result.events || []).filter(e => !e.uid || !existingUids.has(e.uid))
-            .map(e => ({ ...e, id: Storage.generateId() }));
-          if (!_state.calendarEvents) _state.calendarEvents = [];
-          _state.calendarEvents.push(...toAdd);
-
-          let taskCount = 0;
-          if (result.todos && result.todos.length) {
-            taskCount = importTasks(result.todos);
-          }
-
-          if (_onUpdate) _onUpdate();
-          renderEvents();
-
-          const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('fr-FR') : '';
-          const parts = [`${toAdd.length} nouvel événement(s)`];
-          if (taskCount) parts.push(`${taskCount} tâche(s)`);
-          if (statusEl) {
-            statusEl.textContent = `✓ ${parts.join(', ')} — MàJ : ${dateStr}`;
-            statusEl.style.color = 'var(--success, #00d9a6)';
-          }
-        } catch (err) {
-          if (statusEl) {
-            statusEl.textContent = `✗ ${err.message}`;
-            statusEl.style.color = 'var(--danger, #f43f5e)';
-          }
-        } finally {
-          syncBtn.textContent = 'Sync cloud';
-          syncBtn.disabled = false;
-        }
-      };
-    }
-  }
-
   function _esc(str) {
     return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  return { init, parseICS, importFromUrl, importTasks, renderEvents, getEvents, bindCloudSync };
+  return { init, parseICS, importFromUrl, importTasks, getEvents };
 })();
