@@ -87,7 +87,7 @@ const App = (() => {
     if (viewName === 'dashboard') _renderDashboard();
     if (viewName === 'projects') Projects.renderProjectsView();
     if (viewName === 'focus') _renderFocusLauncher();
-    if (viewName === 'calendar') ICal.renderEvents();
+    if (viewName === 'calendar') { ICal.renderEvents(); ICal.bindCloudSync(); }
     if (viewName === 'expenses') Expenses.renderExpensesView();
     if (viewName === 'settings') { Config.loadSettingsUI(); _bindSettingsActions(); }
     if (viewName === 'reports') _populateReportSelects();
