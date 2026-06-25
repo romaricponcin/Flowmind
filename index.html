@@ -307,6 +307,17 @@
           <p class="sync-card-desc">Téléchargez depuis Zimbra et importez ici.</p>
           <input type="file" id="ical-file-input" accept=".ics" class="glass-file-input"/>
         </div>
+        <div class="glass-card sync-card">
+          <div class="sync-card-icon-wrap">☁</div>
+          <h3 class="sync-card-title">Sync cloud (Gist)</h3>
+          <p class="sync-card-desc">Synchronisez depuis le Gist GitHub (via workflow Actions).</p>
+          <div class="input-with-btn">
+            <input type="text" id="agenda-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier"/>
+            <button class="btn-primary btn-sm" id="agenda-cloud-sync-btn">Sync cloud</button>
+          </div>
+          <div id="agenda-cloud-status" style="font-size:11px;margin-top:6px;min-height:14px"></div>
+          <div class="sync-tip">Le workflow GitHub Actions met à jour le Gist toutes les 30 min.</div>
+        </div>
       </div>
       <div id="calendar-events-list" class="calendar-events-list">
         <div class="empty-state"><div class="empty-icon">📅</div>Aucun agenda synchronisé.</div>
@@ -355,6 +366,7 @@
                 <button class="btn-primary btn-sm" id="expenses-cloud-sync-btn">Sync cloud</button>
               </div>
               <div id="expenses-cloud-status" style="font-size:11px;margin-top:4px;min-height:14px"></div>
+              <div class="sync-tip">Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min). Cliquez Sync pour lire les dernières données.</div>
             </div>
           </div>
         </details>

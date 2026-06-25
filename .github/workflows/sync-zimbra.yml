@@ -13,7 +13,7 @@ name: Sync Zimbra Calendar
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # Toutes les 2 heures
+    - cron: '*/30 * * * *'  # Toutes les 30 minutes
   workflow_dispatch:        # Declenchement manuel
 
 jobs:

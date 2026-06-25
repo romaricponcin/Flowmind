@@ -278,9 +278,64 @@ const ICal = (() => {
     return (_state?.calendarEvents || []).filter(e => e.start);
   }
 
+  function bindCloudSync() {
+    const gistInput = document.getElementById('agenda-ics-gist-id');
+    const syncBtn = document.getElementById('agenda-cloud-sync-btn');
+    const statusEl = document.getElementById('agenda-cloud-status');
+
+    if (gistInput) gistInput.value = Storage.getIcsGistId();
+
+    if (syncBtn) {
+      syncBtn.onclick = async () => {
+        const gistId = gistInput?.value.trim();
+        if (!gistId) { alert('Saisissez l\'ID du Gist calendrier.'); return; }
+        Storage.setIcsGistId(gistId);
+
+        syncBtn.textContent = '⏳ Sync…';
+        syncBtn.disabled = true;
+        if (statusEl) { statusEl.textContent = 'Synchronisation en cours…'; statusEl.style.color = 'var(--text-2)'; }
+
+        try {
+          const { icsText, updatedAt } = await Storage.loadIcsFromCloud();
+          const result = parseICS(icsText);
+
+          const existingUids = new Set((_state.calendarEvents || []).map(e => e.uid));
+          const toAdd = (result.events || []).filter(e => !e.uid || !existingUids.has(e.uid))
+            .map(e => ({ ...e, id: Storage.generateId() }));
+          if (!_state.calendarEvents) _state.calendarEvents = [];
+          _state.calendarEvents.push(...toAdd);
+
+          let taskCount = 0;
+          if (result.todos && result.todos.length) {
+            taskCount = importTasks(result.todos);
+          }
+
+          if (_onUpdate) _onUpdate();
+          renderEvents();
+
+          const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('fr-FR') : '';
+          const parts = [`${toAdd.length} nouvel événement(s)`];
+          if (taskCount) parts.push(`${taskCount} tâche(s)`);
+          if (statusEl) {
+            statusEl.textContent = `✓ ${parts.join(', ')} — MàJ : ${dateStr}`;
+            statusEl.style.color = 'var(--success, #00d9a6)';
+          }
+        } catch (err) {
+          if (statusEl) {
+            statusEl.textContent = `✗ ${err.message}`;
+            statusEl.style.color = 'var(--danger, #f43f5e)';
+          }
+        } finally {
+          syncBtn.textContent = 'Sync cloud';
+          syncBtn.disabled = false;
+        }
+      };
+    }
+  }
+
   function _esc(str) {
     return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  return { init, parseICS, importFromUrl, importTasks, renderEvents, getEvents };
+  return { init, parseICS, importFromUrl, importTasks, renderEvents, getEvents, bindCloudSync };
 })();

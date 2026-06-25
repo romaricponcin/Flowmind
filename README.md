@@ -1,5 +1,5 @@
 # ⚡ FlowMind — Gestionnaire de tâches adapté TDA
-**v1.7.0** · Application web 100 % navigateur, sans serveur, sans installation ChangeLog : ajout des modèles de projets
+**v1.8.0** · Application web 100 % navigateur, sans serveur, sans installation — Mise à jour : 2026-06-25
 
 > Conçue pour les profils TDA (Trouble du Déficit de l'Attention) : mode focus, décomposition automatique, gamification, minuterie visuelle.
 
@@ -16,7 +16,9 @@
 | 📌 Mémos | Post-it par projet, épinglage tableau de bord, conversion en tâche |
 | 🔍 Recherche | Recherche catégorisée (Tâche / Sous-tâche / Mémo / Projet) avec surlignage |
 | 🔁 Récurrence | Tâches hebdo / mensuel / tous les X jours |
-| 📅 Agenda | Import Zimbra via URL iCal ou fichier `.ics` |
+| 📅 Agenda | Import Zimbra via URL iCal, fichier `.ics` ou sync cloud (Gist) |
+| 💶 Frais pro | Calendrier mensuel, catégories personnalisables, export CSV, conversion tâche ↔ frais |
+| 🔄 Sync Zimbra | Synchronisation automatique via GitHub Actions + Gist (toutes les 30 min) |
 | 📊 Rapports | Stats filtrées, export Markdown |
 | 💾 Sauvegarde | Export JSON, GitHub Gist, sync fichier local (Nextcloud) |
 | 🎮 Gamification | XP, niveaux, streaks, animations de récompense |
@@ -283,7 +285,7 @@ Si votre dossier est synchronisé par le client Nextcloud (nuage EN ou Nextcloud
   FlowMind → Agenda → coller l'URL → Importer
 ```
 
-> Si erreur CORS → utiliser la méthode par fichier.
+> Si erreur CORS → utiliser la méthode par fichier ou la sync cloud.
 
 #### Via fichier .ics
 
@@ -292,6 +294,36 @@ Si votre dossier est synchronisé par le client Nextcloud (nuage EN ou Nextcloud
 
   FlowMind → Agenda → Importer un fichier .ics → sélectionner le fichier
 ```
+
+#### Via sync cloud (Gist) — recommandé
+
+La sync cloud contourne les restrictions CORS en utilisant un Gist GitHub comme relais.
+
+**Mise en place :**
+1. Créer un Gist secret sur [gist.github.com](https://gist.github.com) (fichier `calendar.ics`, contenu `placeholder`)
+2. Configurer 3 secrets GitHub dans Settings → Secrets → Actions :
+   - `ZIMBRA_ICS_URL` : URL iCal Zimbra
+   - `GH_GIST_TOKEN` : token GitHub (scope `gist`)
+   - `ICS_GIST_ID` : ID du Gist créé
+3. Le workflow GitHub Actions synchronise automatiquement toutes les 30 min
+4. Dans FlowMind → Agenda ou Frais pro → coller le Gist ID → cliquer "Sync cloud"
+
+Les tâches Zimbra (VTODO) sont aussi importées automatiquement.
+
+---
+
+### 💶 Frais professionnels
+
+L'onglet **Frais pro** permet de suivre les déplacements et repas professionnels.
+
+- **Calendrier mensuel** : grille avec pastilles colorées par catégorie, clic sur un jour pour voir le détail
+- **Vue liste** : chronologique, groupée par date
+- **3 catégories prédéfinies** : SOFIA + convocation, Déplacement + OM, Repas → déplacement
+- **Catégories personnalisables** : ajouter, modifier, supprimer via le panneau "Gérer les catégories"
+- **Conversion bidirectionnelle** : tâche → frais (bouton €) et frais → tâche (bouton ⚡)
+- **Événements Zimbra → frais** : convertir un événement du calendrier en frais en un clic
+- **Récapitulatif mensuel** : totaux par catégorie et par statut (brouillon / transmis / remboursé)
+- **Export CSV** : fichier mensuel au format `;` (compatible Excel), encodage UTF-8
 
 ---
 
@@ -337,6 +369,7 @@ flowmind/
     ├── search.js            ← Moteur de recherche catégorisé
     ├── seed-tne-drane.js    ← Données réelles TNE-DRANE (mémos + tâches)
     ├── ical.js              ← Parser iCal, import Zimbra
+    ├── expenses.js          ← Frais professionnels, calendrier, export CSV
     ├── reports.js           ← Rapports, export Markdown
     └── app.js               ← Contrôleur principal, routage, Focus
 ```
@@ -344,6 +377,17 @@ flowmind/
 ---
 
 ## 📝 Changelog
+
+### v1.8.0 — 2026-06-25
+- 💶 **Frais professionnels** : nouvel onglet avec calendrier mensuel, vue liste, récapitulatif
+- 📋 3 catégories prédéfinies (SOFIA, OM, Repas) + catégories personnalisables
+- 🔄 Conversion bidirectionnelle tâches ↔ frais et événements Zimbra → frais
+- 📊 Export CSV mensuel (séparateur `;`, UTF-8 BOM, compatible Excel)
+- ☁ **Sync Zimbra via Gist** : workflow GitHub Actions toutes les 30 min + bouton Sync cloud
+- 📅 Bouton Sync cloud ajouté dans l'onglet Agenda
+- ✅ Support VTODO Zimbra : import automatique des tâches depuis les fichiers .ics
+- 🔍 Recherche intégrée dans les frais (titre, description, lieu)
+- € Bouton "Convertir en frais" sur chaque tâche
 
 ### v1.7.0 — 2026-04-09
 - 📋 **Modèles de projets** : créer et réutiliser des templates de projets
