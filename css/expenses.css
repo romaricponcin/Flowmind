@@ -428,6 +428,12 @@
 }
 
 /* ── Expense report section (in Rapports tab) ─────────────────── */
+.expense-report-block {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--glass-border, rgba(255,255,255,0.12));
+}
+
 .expense-report-header {
   margin-bottom: 16px;
 }
