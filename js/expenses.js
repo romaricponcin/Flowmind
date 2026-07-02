@@ -233,9 +233,23 @@ const Expenses = (() => {
 
         syncBtn.textContent = '⏳ Sync…';
         syncBtn.disabled = true;
-        if (statusEl) { statusEl.textContent = 'Synchronisation en cours…'; statusEl.style.color = 'var(--text-2)'; }
+
+        const setStatus = (msg, color) => {
+          if (statusEl) { statusEl.textContent = msg; statusEl.style.color = color || 'var(--text-2)'; }
+        };
 
         try {
+          // 1. Déclencher la GitHub Action pour fetcher Zimbra
+          setStatus('⏳ Déclenchement de la sync Zimbra…');
+          const triggerTime = new Date();
+          await Storage.triggerIcsWorkflow();
+
+          // 2. Attendre la fin du workflow (~10-20s)
+          setStatus('⏳ Récupération du calendrier Zimbra (10-20s)…');
+          await Storage.waitForIcsWorkflow(triggerTime);
+
+          // 3. Lire le Gist maintenant à jour
+          setStatus('⏳ Lecture du Gist…');
           const { icsText, updatedAt } = await Storage.loadIcsFromCloud();
           const result = ICal.parseICS(icsText);
 
@@ -258,15 +272,10 @@ const Expenses = (() => {
           const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('fr-FR') : '';
           const parts = [`${toAdd.length} nouvel événement(s)`];
           if (taskCount) parts.push(`${taskCount} tâche(s)`);
-          if (statusEl) {
-            statusEl.textContent = `✓ ${parts.join(', ')} — MàJ : ${dateStr}`;
-            statusEl.style.color = 'var(--success, #00d9a6)';
-          }
+          setStatus(`✓ ${parts.join(', ')} — MàJ : ${dateStr}`, 'var(--success, #00d9a6)');
+
         } catch (err) {
-          if (statusEl) {
-            statusEl.textContent = `✗ ${err.message}`;
-            statusEl.style.color = 'var(--danger, #f43f5e)';
-          }
+          setStatus(`✗ ${err.message}`, 'var(--danger, #f43f5e)');
         } finally {
           syncBtn.textContent = 'Sync cloud';
           syncBtn.disabled = false;
