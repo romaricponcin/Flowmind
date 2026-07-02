@@ -142,7 +142,9 @@ const Storage = (() => {
   }
 
   // ── ICS GIST (Zimbra calendar sync) ──────────────────────────────────
-  const ICS_GIST_KEY = 'flowmind_ics_gist_id';
+  const ICS_GIST_KEY    = 'flowmind_ics_gist_id';
+  const GITHUB_REPO     = 'romaricponcin/Flowmind';
+  const ICS_WORKFLOW    = 'sync-zimbra.yml';
 
   function getIcsGistId() { return localStorage.getItem(ICS_GIST_KEY) || ''; }
   function setIcsGistId(id) { localStorage.setItem(ICS_GIST_KEY, id); }
@@ -162,7 +164,55 @@ const Storage = (() => {
     return { icsText: raw, updatedAt: json.updated_at };
   }
 
+  async function triggerIcsWorkflow() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ref: 'master' })
+      }
+    );
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(`Erreur déclenchement workflow : ${resp.status} ${err.message || ''}`);
+    }
+  }
+
+  async function waitForIcsWorkflow(afterDate, timeoutMs = 45000) {
+    const token = getCloudToken();
+    const headers = {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github.v3+json'
+    };
+    const deadline = Date.now() + timeoutMs;
+    await new Promise(r => setTimeout(r, 4000)); // laisse le run apparaître
+
+    while (Date.now() < deadline) {
+      const resp = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/runs?per_page=3`,
+        { headers }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        const done = (data.workflow_runs || []).find(r =>
+          new Date(r.created_at) >= afterDate && r.status === 'completed'
+        );
+        if (done) return;
+      }
+      await new Promise(r => setTimeout(r, 3000));
+    }
+    throw new Error('Timeout : le workflow Zimbra n\'a pas répondu dans les temps.');
+  }
+
   return { load, save, reset, generateId, DEFAULT_STATE,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
-    getIcsGistId, setIcsGistId, loadIcsFromCloud };
+    getIcsGistId, setIcsGistId, loadIcsFromCloud,
+    triggerIcsWorkflow, waitForIcsWorkflow };
 })();
