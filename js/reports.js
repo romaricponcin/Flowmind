@@ -21,25 +21,27 @@ const Reports = (() => {
 
     const projectFilter = document.getElementById('report-project-filter')?.value || 'all';
     const period = document.getElementById('report-period')?.value || 'week';
-    const container    = document.getElementById('report-output');
-    const expContainer = document.getElementById('report-expenses-output');
+    const container = document.getElementById('report-output');
     if (!container) return;
 
     const history = _filterHistory(projectFilter, period);
     const stats   = _computeStats(history, projectFilter);
 
+    container.innerHTML = '';
+
     if (!history.length) {
       container.innerHTML = '<div class="empty-state">Aucune tâche accomplie sur cette période. Continuez, vous y êtes presque !</div>';
     } else {
-      container.innerHTML = '';
       container.appendChild(_buildReportDOM(history, stats, projectFilter, period));
     }
 
-    if (expContainer && typeof Expenses !== 'undefined') {
+    if (typeof Expenses !== 'undefined') {
       const expenses   = _filterExpenses(period);
       const categories = Expenses.getCategories();
-      expContainer.innerHTML = _buildExpenseReportHTML(expenses, categories, period);
-      expContainer.style.display = '';
+      const expDiv = document.createElement('div');
+      expDiv.className = 'expense-report-block';
+      expDiv.innerHTML = _buildExpenseReportHTML(expenses, categories, period);
+      container.appendChild(expDiv);
     }
   }
 
