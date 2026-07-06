@@ -204,15 +204,45 @@ const Storage = (() => {
         const done = (data.workflow_runs || []).find(r =>
           new Date(r.created_at) >= afterDate && r.status === 'completed'
         );
-        if (done) return;
+        if (done) {
+          if (done.conclusion === 'success') return;
+          throw new Error(`Le workflow Zimbra a échoué (${done.conclusion}). Le serveur du ministère est peut-être injoignable — réessayez dans quelques minutes.`);
+        }
       }
       await new Promise(r => setTimeout(r, 3000));
     }
     throw new Error('Timeout : le workflow Zimbra n\'a pas répondu dans les temps.');
   }
 
+  // État du workflow : 'active' ou 'disabled_manually' (= synchro en pause)
+  async function getIcsWorkflowState() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) throw new Error(`Erreur lecture état workflow : HTTP ${resp.status}`);
+    const json = await resp.json();
+    return json.state;
+  }
+
+  async function setIcsWorkflowEnabled(enabled) {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/${enabled ? 'enable' : 'disable'}`,
+      { method: 'PUT', headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(`Erreur ${enabled ? 'reprise' : 'pause'} de la synchro : ${resp.status} ${err.message || ''}`);
+    }
+  }
+
   return { load, save, reset, generateId, DEFAULT_STATE,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
     getIcsGistId, setIcsGistId, loadIcsFromCloud,
-    triggerIcsWorkflow, waitForIcsWorkflow };
+    triggerIcsWorkflow, waitForIcsWorkflow,
+    getIcsWorkflowState, setIcsWorkflowEnabled };
 })();

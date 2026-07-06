@@ -25,10 +25,13 @@ jobs:
           ZIMBRA_URL: ${{ secrets.ZIMBRA_ICS_URL }}
           ZIMBRA_AUTH: ${{ secrets.ZIMBRA_AUTH }}
         run: |
+          # Le serveur du ministère rejette parfois les IP des runners GitHub :
+          # timeout court + 5 réessais espacés de 15s, en IPv4 forcé
+          CURL_OPTS="-4 -sSfL --connect-timeout 20 --retry 5 --retry-delay 15 --retry-all-errors"
           if [ -n "$ZIMBRA_AUTH" ]; then
-            curl -sSfL -u "$ZIMBRA_AUTH" "$ZIMBRA_URL" -o calendar.ics
+            curl $CURL_OPTS -u "$ZIMBRA_AUTH" "$ZIMBRA_URL" -o calendar.ics
           else
-            curl -sSfL "$ZIMBRA_URL" -o calendar.ics
+            curl $CURL_OPTS "$ZIMBRA_URL" -o calendar.ics
           fi
           SIZE=$(wc -c < calendar.ics)
           echo "Downloaded $SIZE bytes"
