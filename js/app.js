@@ -236,11 +236,16 @@ const App = (() => {
   }
 
   function _bindSettingsActions() {
+    // NB : cette fonction est rappelée à chaque ouverture des Paramètres —
+    // on affecte via on* (idempotent) et jamais addEventListener, sinon les
+    // handlers s'empilent et un clic déclenche N sauvegardes simultanées.
+
     // Live preview of colors
     ['cfg-accent-color', 'cfg-success-color'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', (e) => {
+      const el = document.getElementById(id);
+      if (el) el.oninput = (e) => {
         if (id === 'cfg-accent-color') Config.applyAccentColor ? Config.applyAccentColor(e.target.value) : null;
-      });
+      };
     });
 
     // Pré-remplir le token s'il existe déjà
@@ -248,7 +253,8 @@ const App = (() => {
     if (tokenInput) tokenInput.value = Storage.getCloudToken();
 
     // Sauvegarder dans le cloud
-    document.getElementById('cloud-save-btn')?.addEventListener('click', async () => {
+    const cloudSaveBtn = document.getElementById('cloud-save-btn');
+    if (cloudSaveBtn) cloudSaveBtn.onclick = async () => {
       const t = document.getElementById('cloud-token-input')?.value.trim();
       if (t) Storage.setCloudToken(t);
       _setCloudStatus('⏳ Sauvegarde en cours…', 'var(--t3)');
@@ -258,10 +264,11 @@ const App = (() => {
       } catch (e) {
         _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
     // Charger depuis le cloud
-    document.getElementById('cloud-load-btn')?.addEventListener('click', async () => {
+    const cloudLoadBtn = document.getElementById('cloud-load-btn');
+    if (cloudLoadBtn) cloudLoadBtn.onclick = async () => {
       const t = document.getElementById('cloud-token-input')?.value.trim();
       if (t) Storage.setCloudToken(t);
       _setCloudStatus('⏳ Chargement en cours…', 'var(--t3)');
@@ -272,10 +279,11 @@ const App = (() => {
       } catch (e) {
         _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
     // ── Sync fichier local (File System Access API) ──
-    document.getElementById('nc-save-btn')?.addEventListener('click', async () => {
+    const ncSaveBtn = document.getElementById('nc-save-btn');
+    if (ncSaveBtn) ncSaveBtn.onclick = async () => {
       if (!window.showSaveFilePicker) {
         _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
         return;
@@ -293,9 +301,10 @@ const App = (() => {
       } catch (e) {
         if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
-    document.getElementById('nc-load-btn')?.addEventListener('click', async () => {
+    const ncLoadBtn = document.getElementById('nc-load-btn');
+    if (ncLoadBtn) ncLoadBtn.onclick = async () => {
       if (!window.showOpenFilePicker) {
         _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
         return;
@@ -312,7 +321,7 @@ const App = (() => {
       } catch (e) {
         if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
   }
 
   // ─── DASHBOARD ─────────────────────────────────────────────────────────

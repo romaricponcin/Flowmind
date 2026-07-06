@@ -121,7 +121,11 @@ const Storage = (() => {
     const gistId = getGistId();
     const url    = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
     const method = gistId ? 'PATCH' : 'POST';
-    const resp = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    let resp = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    // Gist mémorisé supprimé côté GitHub → on en recrée un proprement
+    if (resp.status === 404 && gistId) {
+      resp = await fetch('https://api.github.com/gists', { method: 'POST', headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    }
     if (!resp.ok) { const err = await resp.json(); throw new Error(err.message || `HTTP ${resp.status}`); }
     const json = await resp.json();
     setGistId(json.id);
