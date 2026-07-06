@@ -189,7 +189,22 @@ const Storage = (() => {
     }
   }
 
-  async function waitForIcsWorkflow(afterDate, timeoutMs = 45000) {
+  // Id du run le plus récent — sert de repère avant un déclenchement.
+  // On repère par id (croissant) et non par date : l'horloge du PC peut
+  // être décalée de celle de GitHub, ce qui faisait rater le run.
+  async function getLatestIcsRunId() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/runs?per_page=1`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) return 0;
+    const data = await resp.json();
+    return (data.workflow_runs && data.workflow_runs[0]) ? data.workflow_runs[0].id : 0;
+  }
+
+  async function waitForIcsWorkflow(sinceRunId, timeoutMs = 90000) {
     const token = getCloudToken();
     const headers = {
       Authorization: `token ${token}`,
@@ -206,7 +221,7 @@ const Storage = (() => {
       if (resp.ok) {
         const data = await resp.json();
         const done = (data.workflow_runs || []).find(r =>
-          new Date(r.created_at) >= afterDate && r.status === 'completed'
+          r.id > sinceRunId && r.status === 'completed'
         );
         if (done) {
           if (done.conclusion === 'success') return;
@@ -247,6 +262,6 @@ const Storage = (() => {
   return { load, save, reset, generateId, DEFAULT_STATE,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
     getIcsGistId, setIcsGistId, loadIcsFromCloud,
-    triggerIcsWorkflow, waitForIcsWorkflow,
+    triggerIcsWorkflow, waitForIcsWorkflow, getLatestIcsRunId,
     getIcsWorkflowState, setIcsWorkflowEnabled };
 })();

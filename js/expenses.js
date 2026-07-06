@@ -296,14 +296,14 @@ const Expenses = (() => {
             resumedForSync = true;
           }
 
-          // 1. Déclencher la GitHub Action pour fetcher Zimbra
+          // 1. Repérer le dernier run existant, puis déclencher la GitHub Action
           setStatus('⏳ Déclenchement de la sync Zimbra…');
-          const triggerTime = new Date();
+          const lastRunId = await Storage.getLatestIcsRunId();
           await Storage.triggerIcsWorkflow();
 
-          // 2. Attendre la fin du workflow (~10-20s)
+          // 2. Attendre un run plus récent que le repère (~10-20s)
           setStatus('⏳ Récupération du calendrier Zimbra (10-20s)…');
-          await Storage.waitForIcsWorkflow(triggerTime);
+          await Storage.waitForIcsWorkflow(lastRunId);
 
           // 3. Lire le Gist maintenant à jour
           setStatus('⏳ Lecture du Gist…');
