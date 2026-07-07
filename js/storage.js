@@ -66,6 +66,9 @@ const Storage = (() => {
         state = DemoTNE.seed(state);
         save(state);
       }
+      // Sauvegarde cloud de session : couvre les modifications de la veille
+      // faites moins de 30 s avant la fermeture de l'onglet
+      _scheduleAutoBackup(state);
       return state;
     } catch (e) {
       console.error('[Storage] Load error:', e);
@@ -76,11 +79,34 @@ const Storage = (() => {
   function save(data) {
     try {
       localStorage.setItem(KEY, JSON.stringify(data));
+      _scheduleAutoBackup(data);
       return true;
     } catch (e) {
       console.error('[Storage] Save error:', e);
       return false;
     }
+  }
+
+  // ── SAUVEGARDE CLOUD AUTOMATIQUE ──────────────────────────────────────
+  // Déclenchée ~30 s après la dernière modification : les changements en
+  // rafale sont regroupés en une seule mise à jour du Gist.
+  const AUTO_BACKUP_DELAY_MS = 30000;
+  let _backupTimer = null;
+  let _onAutoBackup = null; // callback UI optionnel, reçoit (err|null)
+
+  function setAutoBackupCallback(cb) { _onAutoBackup = cb; }
+
+  function _scheduleAutoBackup(data) {
+    if (!getCloudToken()) return; // pas de token configuré → pas d'auto-backup
+    clearTimeout(_backupTimer);
+    _backupTimer = setTimeout(() => {
+      saveToCloud(data)
+        .then(() => { if (_onAutoBackup) _onAutoBackup(null); })
+        .catch(e => {
+          console.warn('[Storage] Sauvegarde cloud auto échouée :', e.message);
+          if (_onAutoBackup) _onAutoBackup(e);
+        });
+    }, AUTO_BACKUP_DELAY_MS);
   }
 
   function reset() {
@@ -260,6 +286,7 @@ const Storage = (() => {
   }
 
   return { load, save, reset, generateId, DEFAULT_STATE,
+    setAutoBackupCallback,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
     getIcsGistId, setIcsGistId, loadIcsFromCloud,
     triggerIcsWorkflow, waitForIcsWorkflow, getLatestIcsRunId,
