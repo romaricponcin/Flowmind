@@ -29,12 +29,7 @@ const Reports = (() => {
 
     container.innerHTML = '';
 
-    if (!history.length) {
-      container.innerHTML = '<div class="empty-state">Aucune tâche accomplie sur cette période. Continuez, vous y êtes presque !</div>';
-    } else {
-      container.appendChild(_buildReportDOM(history, stats, projectFilter, period));
-    }
-
+    // Frais en tête de rapport (plus lisibles), tâches ensuite
     if (typeof Expenses !== 'undefined') {
       const expenses   = _filterExpenses(period);
       const categories = Expenses.getCategories();
@@ -42,6 +37,15 @@ const Reports = (() => {
       expDiv.className = 'expense-report-block';
       expDiv.innerHTML = _buildExpenseReportHTML(expenses, categories, period);
       container.appendChild(expDiv);
+    }
+
+    if (!history.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = 'Aucune tâche accomplie sur cette période. Continuez, vous y êtes presque !';
+      container.appendChild(empty);
+    } else {
+      container.appendChild(_buildReportDOM(history, stats, projectFilter, period));
     }
   }
 
