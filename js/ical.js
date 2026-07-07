@@ -58,6 +58,11 @@ const ICal = (() => {
         current = {};
         currentType = 'todo';
       } else if ((line === 'END:VEVENT' || line === 'END:VTODO') && current) {
+        // Zimbra exporte les rendez-vous privés sans SUMMARY : on les garde
+        // avec un titre générique plutôt que de les perdre
+        if (currentType === 'event' && !current.title && current.icsClass === 'PRIVATE' && current.start) {
+          current.title = '🔒 Privé';
+        }
         if (current.title) {
           if (currentType === 'event') events.push(current);
           else todos.push(current);
@@ -73,6 +78,9 @@ const ICal = (() => {
         switch (key) {
           case 'SUMMARY':
             current.title = _unescapeICS(val);
+            break;
+          case 'CLASS':
+            current.icsClass = val.trim().toUpperCase();
             break;
           case 'DESCRIPTION':
             current.description = _unescapeICS(val).substring(0, 200);
