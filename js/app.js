@@ -303,6 +303,12 @@ const App = (() => {
       }
     };
 
+    // Statut de la sauvegarde cloud automatique (~30 s après chaque modif)
+    Storage.setAutoBackupCallback((err) => {
+      if (err) _setCloudStatus('✗ Sauvegarde auto : ' + err.message, 'var(--danger)');
+      else _setCloudStatus('✓ Sauvegarde auto — ' + new Date().toLocaleTimeString('fr-FR'), 'var(--mint)');
+    });
+
     const ncLoadBtn = document.getElementById('nc-load-btn');
     if (ncLoadBtn) ncLoadBtn.onclick = async () => {
       if (!window.showOpenFilePicker) {

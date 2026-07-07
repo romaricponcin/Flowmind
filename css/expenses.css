@@ -428,10 +428,11 @@
 }
 
 /* ── Expense report section (in Rapports tab) ─────────────────── */
+/* Le bloc frais est désormais en tête de rapport : séparateur en dessous */
 .expense-report-block {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--glass-border, rgba(255,255,255,0.12));
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.12));
 }
 
 .expense-report-header {
