@@ -88,6 +88,10 @@
 .report-output {
   gap: 20px;
   min-height: 200px;
+  /* Enfant de la colonne flex défilante .view : sans flex-shrink:0, la
+     carte est comprimée à la hauteur de l'écran et son fond s'arrête
+     (coins arrondis en plein contenu) pendant que le contenu déborde. */
+  flex-shrink: 0;
   /* Pas de backdrop-filter ici : sur un rapport long, Chrome atteint la
      limite de texture GPU et coupe le rendu du fond en plein contenu.
      Fond plus opaque en compensation de l'absence de blur. */
