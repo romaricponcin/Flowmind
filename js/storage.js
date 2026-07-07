@@ -133,8 +133,10 @@ const Storage = (() => {
   // ── CLOUD SYNC (GitHub Gist) ────────────────────────────────────────────
   const CLOUD_TOKEN_KEY = 'flowmind_gist_token';
   const CLOUD_GIST_KEY  = 'flowmind_gist_id';
+  const LAST_BACKUP_KEY = 'flowmind_last_backup';
 
   function getCloudToken() { return localStorage.getItem(CLOUD_TOKEN_KEY) || ''; }
+  function getLastBackupAt() { return localStorage.getItem(LAST_BACKUP_KEY) || ''; }
   function setCloudToken(t) { localStorage.setItem(CLOUD_TOKEN_KEY, t); }
   function getGistId()      { return localStorage.getItem(CLOUD_GIST_KEY) || ''; }
   function setGistId(id)    { localStorage.setItem(CLOUD_GIST_KEY, id); }
@@ -155,6 +157,7 @@ const Storage = (() => {
     if (!resp.ok) { const err = await resp.json(); throw new Error(err.message || `HTTP ${resp.status}`); }
     const json = await resp.json();
     setGistId(json.id);
+    localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString());
     return json;
   }
 
@@ -286,7 +289,7 @@ const Storage = (() => {
   }
 
   return { load, save, reset, generateId, DEFAULT_STATE,
-    setAutoBackupCallback,
+    setAutoBackupCallback, getLastBackupAt,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
     getIcsGistId, setIcsGistId, loadIcsFromCloud,
     triggerIcsWorkflow, waitForIcsWorkflow, getLatestIcsRunId,

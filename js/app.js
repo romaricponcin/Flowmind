@@ -13,6 +13,13 @@ const App = (() => {
   function init() {
     _state = Storage.load();
 
+    // Indicateur de sauvegarde cloud auto — branché dès le démarrage pour
+    // capter aussi les sauvegardes déclenchées hors de l'onglet Paramètres
+    Storage.setAutoBackupCallback((err) => {
+      if (err) _setCloudStatus('✗ Sauvegarde auto : ' + err.message, 'var(--danger)');
+      else _setCloudStatus('✓ Sauvegarde auto — ' + new Date().toLocaleTimeString('fr-FR'), 'var(--mint)');
+    });
+
     // Init modules
     Config.init(_state);
     Gamification.init(_state, saveState);
@@ -303,11 +310,12 @@ const App = (() => {
       }
     };
 
-    // Statut de la sauvegarde cloud automatique (~30 s après chaque modif)
-    Storage.setAutoBackupCallback((err) => {
-      if (err) _setCloudStatus('✗ Sauvegarde auto : ' + err.message, 'var(--danger)');
-      else _setCloudStatus('✓ Sauvegarde auto — ' + new Date().toLocaleTimeString('fr-FR'), 'var(--mint)');
-    });
+    // À l'ouverture des Paramètres : afficher la dernière sauvegarde connue
+    const lastBackup = Storage.getLastBackupAt();
+    const statusEl = document.getElementById('cloud-status');
+    if (lastBackup && statusEl && !statusEl.textContent) {
+      _setCloudStatus('✓ Dernière sauvegarde cloud : ' + new Date(lastBackup).toLocaleString('fr-FR'), 'var(--mint)');
+    }
 
     const ncLoadBtn = document.getElementById('nc-load-btn');
     if (ncLoadBtn) ncLoadBtn.onclick = async () => {
