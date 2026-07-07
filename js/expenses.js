@@ -216,13 +216,64 @@ const Expenses = (() => {
 
   // ── CLOUD SYNC (Gist ICS) ──────────────────────────────────────────
 
+  let _wfPaused = null; // null = état inconnu, true = synchro auto en pause
+
+  function _updatePauseUI() {
+    const pauseBtn = document.getElementById('agenda-cloud-pause-btn');
+    const tipEl = document.getElementById('agenda-sync-tip');
+    if (!pauseBtn) return;
+    if (_wfPaused === true) {
+      pauseBtn.textContent = '▶';
+      pauseBtn.title = 'Reprendre la synchronisation automatique';
+      if (tipEl) tipEl.textContent = '⏸ Synchro auto en pause — le bouton Sync cloud reste utilisable ponctuellement.';
+    } else {
+      pauseBtn.textContent = '⏸';
+      pauseBtn.title = 'Suspendre la synchronisation automatique (vacances…)';
+      if (tipEl) tipEl.textContent = 'Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min).';
+    }
+  }
+
   function _bindCloudSync() {
     const gistInput = document.getElementById('agenda-ics-gist-id');
     const syncBtn = document.getElementById('agenda-cloud-sync-btn');
+    const pauseBtn = document.getElementById('agenda-cloud-pause-btn');
     const statusEl = document.getElementById('agenda-cloud-status');
 
     if (gistInput) {
       gistInput.value = Storage.getIcsGistId();
+    }
+
+    const setStatus = (msg, color) => {
+      if (statusEl) { statusEl.textContent = msg; statusEl.style.color = color || 'var(--text-2)'; }
+    };
+
+    // Lire l'état du workflow une fois par session (si token configuré)
+    if (pauseBtn && _wfPaused === null && Storage.getCloudToken()) {
+      _wfPaused = false; // évite les fetchs répétés à chaque render
+      Storage.getIcsWorkflowState()
+        .then(state => { _wfPaused = (state !== 'active'); _updatePauseUI(); })
+        .catch(() => {});
+    }
+    _updatePauseUI();
+
+    if (pauseBtn) {
+      pauseBtn.onclick = async () => {
+        pauseBtn.disabled = true;
+        try {
+          const state = await Storage.getIcsWorkflowState();
+          const active = (state === 'active');
+          await Storage.setIcsWorkflowEnabled(!active);
+          _wfPaused = active;
+          _updatePauseUI();
+          setStatus(_wfPaused
+            ? '⏸ Synchro automatique en pause.'
+            : '▶ Synchro automatique réactivée.', 'var(--success, #00d9a6)');
+        } catch (err) {
+          setStatus(`✗ ${err.message}`, 'var(--danger, #f43f5e)');
+        } finally {
+          pauseBtn.disabled = false;
+        }
+      };
     }
 
     if (syncBtn) {
@@ -234,19 +285,25 @@ const Expenses = (() => {
         syncBtn.textContent = '⏳ Sync…';
         syncBtn.disabled = true;
 
-        const setStatus = (msg, color) => {
-          if (statusEl) { statusEl.textContent = msg; statusEl.style.color = color || 'var(--text-2)'; }
-        };
-
+        let resumedForSync = false;
         try {
-          // 1. Déclencher la GitHub Action pour fetcher Zimbra
+          // 0. Si la synchro est en pause, réactiver temporairement le workflow
+          //    (workflow_dispatch est refusé sur un workflow désactivé)
+          const state = await Storage.getIcsWorkflowState().catch(() => 'active');
+          if (state !== 'active') {
+            setStatus('▶ Réactivation temporaire du workflow…');
+            await Storage.setIcsWorkflowEnabled(true);
+            resumedForSync = true;
+          }
+
+          // 1. Repérer le dernier run existant, puis déclencher la GitHub Action
           setStatus('⏳ Déclenchement de la sync Zimbra…');
-          const triggerTime = new Date();
+          const lastRunId = await Storage.getLatestIcsRunId();
           await Storage.triggerIcsWorkflow();
 
-          // 2. Attendre la fin du workflow (~10-20s)
+          // 2. Attendre un run plus récent que le repère (~10-20s)
           setStatus('⏳ Récupération du calendrier Zimbra (10-20s)…');
-          await Storage.waitForIcsWorkflow(triggerTime);
+          await Storage.waitForIcsWorkflow(lastRunId);
 
           // 3. Lire le Gist maintenant à jour
           setStatus('⏳ Lecture du Gist…');
@@ -277,6 +334,10 @@ const Expenses = (() => {
         } catch (err) {
           setStatus(`✗ ${err.message}`, 'var(--danger, #f43f5e)');
         } finally {
+          // Si la synchro auto était en pause, la remettre en pause
+          if (resumedForSync) {
+            try { await Storage.setIcsWorkflowEnabled(false); _wfPaused = true; _updatePauseUI(); } catch (e) {}
+          }
           syncBtn.textContent = 'Sync cloud';
           syncBtn.disabled = false;
         }

@@ -325,9 +325,10 @@
               <div class="input-with-btn">
                 <input type="text" id="agenda-ics-gist-id" class="glass-input glass-input-sm" placeholder="ID du Gist calendrier"/>
                 <button class="btn-primary btn-sm" id="agenda-cloud-sync-btn">Sync cloud</button>
+                <button class="btn-secondary btn-sm" id="agenda-cloud-pause-btn" title="Suspendre / reprendre la synchronisation automatique">⏸</button>
               </div>
               <div id="agenda-cloud-status" style="font-size:11px;margin-top:4px;min-height:14px"></div>
-              <div class="sync-tip">Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min).</div>
+              <div class="sync-tip" id="agenda-sync-tip">Le Gist est mis à jour automatiquement par GitHub Actions (toutes les 30 min).</div>
             </div>
           </div>
         </details>

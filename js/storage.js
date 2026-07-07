@@ -121,7 +121,11 @@ const Storage = (() => {
     const gistId = getGistId();
     const url    = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
     const method = gistId ? 'PATCH' : 'POST';
-    const resp = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    let resp = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    // Gist mémorisé supprimé côté GitHub → on en recrée un proprement
+    if (resp.status === 404 && gistId) {
+      resp = await fetch('https://api.github.com/gists', { method: 'POST', headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    }
     if (!resp.ok) { const err = await resp.json(); throw new Error(err.message || `HTTP ${resp.status}`); }
     const json = await resp.json();
     setGistId(json.id);
@@ -185,7 +189,22 @@ const Storage = (() => {
     }
   }
 
-  async function waitForIcsWorkflow(afterDate, timeoutMs = 45000) {
+  // Id du run le plus récent — sert de repère avant un déclenchement.
+  // On repère par id (croissant) et non par date : l'horloge du PC peut
+  // être décalée de celle de GitHub, ce qui faisait rater le run.
+  async function getLatestIcsRunId() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/runs?per_page=1`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) return 0;
+    const data = await resp.json();
+    return (data.workflow_runs && data.workflow_runs[0]) ? data.workflow_runs[0].id : 0;
+  }
+
+  async function waitForIcsWorkflow(sinceRunId, timeoutMs = 90000) {
     const token = getCloudToken();
     const headers = {
       Authorization: `token ${token}`,
@@ -202,17 +221,47 @@ const Storage = (() => {
       if (resp.ok) {
         const data = await resp.json();
         const done = (data.workflow_runs || []).find(r =>
-          new Date(r.created_at) >= afterDate && r.status === 'completed'
+          r.id > sinceRunId && r.status === 'completed'
         );
-        if (done) return;
+        if (done) {
+          if (done.conclusion === 'success') return;
+          throw new Error(`Le workflow Zimbra a échoué (${done.conclusion}). Le serveur du ministère est peut-être injoignable — réessayez dans quelques minutes.`);
+        }
       }
       await new Promise(r => setTimeout(r, 3000));
     }
     throw new Error('Timeout : le workflow Zimbra n\'a pas répondu dans les temps.');
   }
 
+  // État du workflow : 'active' ou 'disabled_manually' (= synchro en pause)
+  async function getIcsWorkflowState() {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) throw new Error(`Erreur lecture état workflow : HTTP ${resp.status}`);
+    const json = await resp.json();
+    return json.state;
+  }
+
+  async function setIcsWorkflowEnabled(enabled) {
+    const token = getCloudToken();
+    if (!token) throw new Error('Token GitHub manquant.');
+    const resp = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${ICS_WORKFLOW}/${enabled ? 'enable' : 'disable'}`,
+      { method: 'PUT', headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(`Erreur ${enabled ? 'reprise' : 'pause'} de la synchro : ${resp.status} ${err.message || ''}`);
+    }
+  }
+
   return { load, save, reset, generateId, DEFAULT_STATE,
     getCloudToken, setCloudToken, getGistId, saveToCloud, loadFromCloud,
     getIcsGistId, setIcsGistId, loadIcsFromCloud,
-    triggerIcsWorkflow, waitForIcsWorkflow };
+    triggerIcsWorkflow, waitForIcsWorkflow, getLatestIcsRunId,
+    getIcsWorkflowState, setIcsWorkflowEnabled };
 })();
