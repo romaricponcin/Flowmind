@@ -13,6 +13,13 @@ const App = (() => {
   function init() {
     _state = Storage.load();
 
+    // Indicateur de sauvegarde cloud auto — branché dès le démarrage pour
+    // capter aussi les sauvegardes déclenchées hors de l'onglet Paramètres
+    Storage.setAutoBackupCallback((err) => {
+      if (err) _setCloudStatus('✗ Sauvegarde auto : ' + err.message, 'var(--danger)');
+      else _setCloudStatus('✓ Sauvegarde auto — ' + new Date().toLocaleTimeString('fr-FR'), 'var(--mint)');
+    });
+
     // Init modules
     Config.init(_state);
     Gamification.init(_state, saveState);
@@ -20,6 +27,8 @@ const App = (() => {
     Projects.init(_state, saveState);
     Tasks.init(_state, saveState);
     Memos.init(_state, saveState);
+    Expenses.init(_state, saveState);
+    Templates.init(_state, saveState);
     ICal.init(_state, saveState);
     Reports.init(_state);
 
@@ -73,7 +82,7 @@ const App = (() => {
       dashboard: 'Tableau de bord',
       focus: 'Mode Focus',
       projects: 'Projets',
-      calendar: 'Agenda',
+      agenda: 'Agenda & Frais',
       reports: 'Rapports d\'activité',
       settings: 'Paramètres'
     };
@@ -84,7 +93,7 @@ const App = (() => {
     if (viewName === 'dashboard') _renderDashboard();
     if (viewName === 'projects') Projects.renderProjectsView();
     if (viewName === 'focus') _renderFocusLauncher();
-    if (viewName === 'calendar') ICal.renderEvents();
+    if (viewName === 'agenda') Expenses.renderExpensesView();
     if (viewName === 'settings') { Config.loadSettingsUI(); _bindSettingsActions(); }
     if (viewName === 'reports') _populateReportSelects();
   }
@@ -108,6 +117,16 @@ const App = (() => {
     // New project btn
     document.getElementById('new-project-btn')?.addEventListener('click', () => {
       Projects.showCreateModal();
+    });
+
+    // Create project from template btn
+    document.getElementById('project-from-template-btn')?.addEventListener('click', () => {
+      Templates.showUseTemplateModal();
+    });
+
+    // Manage templates btn
+    document.getElementById('manage-templates-btn')?.addEventListener('click', () => {
+      Templates.showTemplatesPanel();
     });
 
     // Help button — affiche le README.md rendu en HTML
@@ -135,6 +154,8 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
+        Templates.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -156,6 +177,8 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
+        Templates.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -181,6 +204,8 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
+        Templates.init(_state, saveState);
         Projects.populateSelects();
         Gamification.renderSidebar();
         closeModal();
@@ -218,11 +243,16 @@ const App = (() => {
   }
 
   function _bindSettingsActions() {
+    // NB : cette fonction est rappelée à chaque ouverture des Paramètres —
+    // on affecte via on* (idempotent) et jamais addEventListener, sinon les
+    // handlers s'empilent et un clic déclenche N sauvegardes simultanées.
+
     // Live preview of colors
     ['cfg-accent-color', 'cfg-success-color'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', (e) => {
+      const el = document.getElementById(id);
+      if (el) el.oninput = (e) => {
         if (id === 'cfg-accent-color') Config.applyAccentColor ? Config.applyAccentColor(e.target.value) : null;
-      });
+      };
     });
 
     // Pré-remplir le token s'il existe déjà
@@ -230,7 +260,8 @@ const App = (() => {
     if (tokenInput) tokenInput.value = Storage.getCloudToken();
 
     // Sauvegarder dans le cloud
-    document.getElementById('cloud-save-btn')?.addEventListener('click', async () => {
+    const cloudSaveBtn = document.getElementById('cloud-save-btn');
+    if (cloudSaveBtn) cloudSaveBtn.onclick = async () => {
       const t = document.getElementById('cloud-token-input')?.value.trim();
       if (t) Storage.setCloudToken(t);
       _setCloudStatus('⏳ Sauvegarde en cours…', 'var(--t3)');
@@ -240,10 +271,11 @@ const App = (() => {
       } catch (e) {
         _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
     // Charger depuis le cloud
-    document.getElementById('cloud-load-btn')?.addEventListener('click', async () => {
+    const cloudLoadBtn = document.getElementById('cloud-load-btn');
+    if (cloudLoadBtn) cloudLoadBtn.onclick = async () => {
       const t = document.getElementById('cloud-token-input')?.value.trim();
       if (t) Storage.setCloudToken(t);
       _setCloudStatus('⏳ Chargement en cours…', 'var(--t3)');
@@ -254,10 +286,11 @@ const App = (() => {
       } catch (e) {
         _setCloudStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
     // ── Sync fichier local (File System Access API) ──
-    document.getElementById('nc-save-btn')?.addEventListener('click', async () => {
+    const ncSaveBtn = document.getElementById('nc-save-btn');
+    if (ncSaveBtn) ncSaveBtn.onclick = async () => {
       if (!window.showSaveFilePicker) {
         _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
         return;
@@ -275,9 +308,17 @@ const App = (() => {
       } catch (e) {
         if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
 
-    document.getElementById('nc-load-btn')?.addEventListener('click', async () => {
+    // À l'ouverture des Paramètres : afficher la dernière sauvegarde connue
+    const lastBackup = Storage.getLastBackupAt();
+    const statusEl = document.getElementById('cloud-status');
+    if (lastBackup && statusEl && !statusEl.textContent) {
+      _setCloudStatus('✓ Dernière sauvegarde cloud : ' + new Date(lastBackup).toLocaleString('fr-FR'), 'var(--mint)');
+    }
+
+    const ncLoadBtn = document.getElementById('nc-load-btn');
+    if (ncLoadBtn) ncLoadBtn.onclick = async () => {
       if (!window.showOpenFilePicker) {
         _setNcStatus('✗ Non supporté par ce navigateur (utilisez Chrome ou Edge).', 'var(--danger)');
         return;
@@ -294,7 +335,7 @@ const App = (() => {
       } catch (e) {
         if (e.name !== 'AbortError') _setNcStatus('✗ Erreur : ' + e.message, 'var(--danger)');
       }
-    });
+    };
   }
 
   // ─── DASHBOARD ─────────────────────────────────────────────────────────
@@ -636,6 +677,12 @@ const App = (() => {
     ]);
   }
 
+  function showAlert(title, message) {
+    showModal(title, `<p style="font-size:14px;color:var(--text-secondary)">${message}</p>`, [
+      { label: 'OK', cls: 'btn-secondary', action: closeModal }
+    ]);
+  }
+
   // ─── REPORTS SELECT ────────────────────────────────────────────────────
 
   function _populateReportSelects() {
@@ -912,6 +959,8 @@ const App = (() => {
         Projects.init(_state, saveState);
         Tasks.init(_state, saveState);
         Memos.init(_state, saveState);
+        Expenses.init(_state, saveState);
+        Templates.init(_state, saveState);
         ICal.init(_state, saveState);
         Reports.init(_state);
         Projects.populateSelects();
@@ -1004,7 +1053,7 @@ const App = (() => {
     el.querySelectorAll('blockquote').forEach(bq => { bq.style.cssText = 'border-left:3px solid var(--accent-border);padding:6px 12px;margin:8px 0;background:rgba(79,142,255,0.05);border-radius:0 6px 6px 0'; });
   }
 
-  return { init, refresh, saveState, showModal, closeModal, showConfirm, launchFocusMode };
+  return { init, refresh, saveState, showModal, closeModal, showConfirm, showAlert, launchFocusMode };
 })();
 
 // ── BOOTSTRAP ──────────────────────────────────────────────────────────

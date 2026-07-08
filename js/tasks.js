@@ -267,6 +267,7 @@ const Tasks = (() => {
       '<div class="task-actions">' +
         '<button class="btn-task-action" data-action="edit"   data-id="' + task.id + '" title="Modifier">✎</button>' +
         '<button class="btn-task-action" data-action="focus"  data-id="' + task.id + '" title="Mode focus">◎</button>' +
+        '<button class="btn-task-action" data-action="expense" data-id="' + task.id + '" title="Convertir en frais">€</button>' +
         '<button class="btn-task-action" data-action="delete" data-id="' + task.id + '" title="Supprimer">🗑</button>' +
       '</div>';
 
@@ -307,9 +308,10 @@ const Tasks = (() => {
       const el = e.target.closest('[data-action]');
       if (!el) return;
       const action = el.dataset.action, id = el.dataset.id;
-      if      (action === 'edit')   showEditModal(id);
-      else if (action === 'focus')  App.launchFocusMode(id);
-      else if (action === 'delete') App.showConfirm('Supprimer cette tâche ?', () => { remove(id); App.refresh(); });
+      if      (action === 'edit')    showEditModal(id);
+      else if (action === 'focus')   App.launchFocusMode(id);
+      else if (action === 'expense') { if (typeof Expenses !== 'undefined') Expenses.convertFromTask(id); }
+      else if (action === 'delete')  App.showConfirm('Supprimer cette tâche ?', () => { remove(id); App.refresh(); });
     });
 
     return item;

@@ -1,0 +1,585 @@
+/* FlowMind — Expenses / Frais professionnels */
+
+/* ── Controls bar ─────────────────────────────────────────────── */
+.expenses-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.expenses-view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.expenses-mode-btn {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--r-sm);
+  transition: all 0.18s var(--ease);
+}
+.expenses-mode-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ── Zimbra import panel ──────────────────────────────────────── */
+.expenses-zimbra-panel {
+  margin-bottom: 12px;
+  padding: 0;
+}
+.expenses-zimbra-panel summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  user-select: none;
+}
+.expenses-zimbra-content {
+  padding: 0 14px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Calendar nav ─────────────────────────────────────────────── */
+.expenses-cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.expenses-cal-month {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-1);
+  min-width: 160px;
+  text-align: center;
+}
+
+/* ── Calendar grid ────────────────────────────────────────────── */
+.expenses-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.expenses-cal-header {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  padding: 6px 0;
+}
+
+.expenses-cal-day {
+  position: relative;
+  min-height: 64px;
+  padding: 6px;
+  border-radius: var(--r-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.expenses-cal-day:hover {
+  background: var(--glass-bg-2);
+  border-color: var(--accent-border);
+}
+
+.expenses-cal-day--outside {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.expenses-cal-day--today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-border);
+}
+
+.expenses-cal-day--selected {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.expenses-cal-day-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+.expenses-cal-day--today .expenses-cal-day-num {
+  color: var(--accent);
+}
+
+/* Dots */
+.expenses-cal-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.expenses-cal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.expenses-cal-dot--event {
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.7;
+}
+.expenses-cal-dot--converted {
+  opacity: 0.3;
+}
+
+.expenses-cal-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--accent);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+/* ── Day detail ───────────────────────────────────────────────── */
+.expenses-day-detail {
+  margin-bottom: 16px;
+}
+
+.expenses-day-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.expenses-day-detail-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  text-transform: capitalize;
+}
+
+.expenses-day-empty {
+  font-size: 13px;
+  color: var(--text-3);
+  padding: 12px 0;
+}
+
+.expenses-day-events-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+/* ── Expense row ──────────────────────────────────────────────── */
+.expense-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  margin-bottom: 4px;
+  transition: all 0.18s var(--ease);
+  flex-wrap: wrap;
+}
+.expense-row:hover {
+  background: var(--glass-bg-2);
+}
+
+.expense-row--event {
+  border-left: 3px solid var(--accent);
+  opacity: 0.8;
+  font-style: italic;
+}
+.expense-row--converted {
+  opacity: 0.5;
+}
+
+.expense-category-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.expense-row-title {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-1);
+  min-width: 100px;
+}
+
+.expense-row-location {
+  font-size: 11px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+.expense-amount {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.expense-status {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.expense-row-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.expense-converted-badge {
+  font-size: 11px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* ── List view ────────────────────────────────────────────────── */
+.expenses-list-date-header {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--text-2);
+  padding: 12px 0 4px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 6px;
+}
+
+/* ── Summary ──────────────────────────────────────────────────── */
+#expenses-summary-area {
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.expenses-summary-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 12px;
+  text-transform: capitalize;
+}
+
+.expenses-summary-pills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.expenses-summary-statuses {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.expenses-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Category manager ─────────────────────────────────────────── */
+#expenses-cat-manager {
+  margin-top: 12px;
+  padding: 0;
+}
+#expenses-cat-manager summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  user-select: none;
+}
+#expenses-cat-list {
+  padding: 0 14px 8px;
+}
+#add-expense-cat-btn {
+  margin: 0 14px 14px;
+}
+
+.expense-cat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.expense-cat-item:last-child {
+  border-bottom: none;
+}
+
+.expense-cat-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.expense-cat-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.expense-cat-label {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-1);
+}
+
+.expense-cat-count {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.expense-cat-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* ── Color swatch (category modal) ────────────────────────────── */
+.color-swatch {
+  display: inline-block;
+  transition: transform 0.15s var(--ease);
+}
+.color-swatch:hover {
+  transform: scale(1.2);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .expenses-cal-grid {
+    gap: 2px;
+  }
+  .expenses-cal-day {
+    min-height: 48px;
+    padding: 4px;
+  }
+  .expenses-cal-day-num {
+    font-size: 11px;
+  }
+  .expenses-cal-badge {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+  }
+  .expense-row {
+    padding: 6px 8px;
+  }
+  .expenses-summary-pills {
+    flex-direction: column;
+  }
+  .expenses-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .expenses-cal-day {
+    min-height: 36px;
+  }
+  .expenses-cal-dots {
+    display: none;
+  }
+  .expense-row-location {
+    display: none;
+  }
+}
+
+/* ── Expense report section (in Rapports tab) ─────────────────── */
+/* Le bloc frais est désormais en tête de rapport : séparateur en dessous */
+.expense-report-block {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.12));
+}
+
+.expense-report-header {
+  margin-bottom: 16px;
+}
+.expense-report-header h2 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.expense-report-kpi {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.expense-report-kpi-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  background: var(--glass-bg, rgba(255,255,255,0.06));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.12));
+  border-radius: 12px;
+  min-width: 140px;
+  flex: 1;
+}
+
+.expense-kpi-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.expense-kpi-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.expense-kpi-count {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+}
+
+.expense-kpi-amount {
+  font-size: 13px;
+  color: var(--text-2);
+  font-family: var(--font-mono, monospace);
+}
+
+.expense-report-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 20px 0 10px;
+}
+
+.expense-report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.expense-report-table th,
+.expense-report-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+}
+
+.expense-report-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.expense-report-table tr:last-child td {
+  border-bottom: none;
+}
+
+.expense-cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.expense-cat-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 120px auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.expense-cat-name {
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expense-cat-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+  font-family: var(--font-mono, monospace);
+}
+
+.expense-cat-track {
+  height: 6px;
+  background: var(--glass-border, rgba(255,255,255,0.1));
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.expense-cat-fill {
+  height: 100%;
+  background: var(--accent, #6366f1);
+  border-radius: 99px;
+  transition: width 0.4s var(--ease, ease);
+}
+
+.expense-cat-pct {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--font-mono, monospace);
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .expense-cat-bar {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+  .expense-cat-track, .expense-cat-pct {
+    display: none;
+  }
+}
