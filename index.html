@@ -409,11 +409,11 @@
           <div class="settings-section-title" style="margin-top:14px">☁ Synchronisation cloud</div>
           <p class="danger-desc" style="margin-bottom:10px">
             Sauvegarde <strong>automatique</strong> dans votre compte GitHub (Gist privé), ~30 s après chaque modification. Les boutons servent à forcer une sauvegarde ou à restaurer.<br>
-            <a href="https://github.com/settings/tokens/new?scopes=gist&description=FlowMind" target="_blank" style="color:var(--accent);font-size:11px">Créer un token GitHub (scope : gist) →</a>
+            <a href="https://github.com/settings/tokens/new?scopes=gist,repo,workflow&description=FlowMind" target="_blank" style="color:var(--accent);font-size:11px">Créer un token GitHub (scopes : gist, repo, workflow) →</a>
           </p>
           <div class="form-group" style="margin-bottom:8px">
             <input type="password" id="cloud-token-input" class="glass-input glass-input-sm"
-              placeholder="GitHub Personal Access Token (scope : gist)" autocomplete="off"/>
+              placeholder="GitHub Personal Access Token (gist, repo, workflow)" autocomplete="off"/>
           </div>
           <div style="display:flex;gap:8px">
             <button class="btn-secondary btn-sm" id="cloud-save-btn">☁ Sauvegarder</button>
@@ -435,15 +435,16 @@
 
         <div class="glass-card settings-card">
           <div class="settings-section-title">ℹ À propos</div>
-          <div class="setting-row"><label>Version</label><span class="settings-version-badge">v1.7.0</span></div>
-          <div class="setting-row"><label>Date de mise à jour</label><span style="font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace">2026-04-09</span></div>
+          <div class="setting-row"><label>Version</label><span class="settings-version-badge">v1.9.0</span></div>
+          <div class="setting-row"><label>Date de mise à jour</label><span style="font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace">2026-07-08</span></div>
           <div class="setting-row" style="border:none"><label>Notes de version</label></div>
           <ul class="settings-changelog">
-            <li>🖱 Résultats de recherche cliquables (tâche, projet, mémo)</li>
-            <li>📝 Modifier le texte d'un mémo existant (bouton ✎)</li>
-            <li>🔍 Recherche catégorisée (Tâche · Sous-tâche · Mémo · Projet)</li>
-            <li>⊞ Deux modes d'affichage : flottant ou inline, mémorisés</li>
-            <li>📋 Statuts projets : Actif / En pause / Terminé</li>
+            <li>💾 Sauvegarde cloud automatique (~30 s après chaque modification)</li>
+            <li>📊 Bilan des frais en tête des Rapports (statuts, détail mensuel, catégories)</li>
+            <li>☁ Sync Zimbra à la demande : le bouton déclenche la synchronisation (10-20 s)</li>
+            <li>⏸ Pause de la synchro automatique (vacances) + reprise en un clic</li>
+            <li>🔒 Import des rendez-vous privés Zimbra (créneau « Privé »)</li>
+            <li>🐛 Fiabilisation : échecs de sync détectés, sauvegardes en double corrigées</li>
           </ul>
         </div>
 
